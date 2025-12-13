@@ -1,130 +1,729 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vivian (Jingcheng) Yu's Academic Website</title>
-</head>
+    <title>Vivian (Jingcheng) Yu | Ph.D. Researcher</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:wght@700&display=swap"
+        rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        :root {
+            --gold: #d4af37;
+            --gold-light: #fadd76;
+            --dark-bg: #050505;
+        }
+
+        * {
             margin: 0;
             padding: 0;
-            background-color: #e8eaf6; /* Light indigo background */
-            color: #333;
+            box-sizing: border-box;
         }
-        header {
-            background-color: #3949ab; /* Indigo header */
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark-bg);
             color: #fff;
-            padding: 10px 0;
-            text-align: center;
+            overflow-x: hidden;
+            /* Removed fixed height 400vh to allow natural flow */
         }
-        nav {
+
+        /* --- 1. STICKY HERO TRACK --- */
+        /* Increased to 350vh to allow for "Slow Start" */
+        .video-track {
+            position: relative;
+            width: 100%;
+            height: 350vh;
+            /* RESTORED: Long track for 1:1 linear scrubbing control */
+            background-color: #000;
+            z-index: 1;
+        }
+
+        .sticky-wrapper {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #hero-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Scroll Hint */
+        .scroll-hint {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1rem;
+            letter-spacing: 5px;
+            color: #fff;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+            z-index: 10;
+            animation: bounce 2s infinite;
+        }
+
+        /* --- 2. MAIN CONTENT (Naturally follows video track) --- */
+        .main-content-wrapper {
+            position: relative;
+            z-index: 20;
+            background-color: #000;
+            box-shadow: 0 -50px 100px #000;
+            /* Will be animated via JS for the "Swish" effect */
+            transition: transform 0.1s linear;
+        }
+
+        /* ... [Keeping styles] ... */
+
+        /* ... [Cut to JS] ... */
+
+        <script> // --- 1. LOADER & VIDEO INIT ---
+        const video=document.getElementById('hero-video');
+        const loader=document.getElementById('loader');
+        const scrollHint=document.getElementById('scroll-hint');
+        const track=document.getElementById('video-track');
+        const mainContent=document.getElementById('main-content');
+
+        window.addEventListener('load', ()=> {
+                setTimeout(()=> {
+                        loader.style.opacity='0';
+                        setTimeout(()=> loader.style.display='none', 1000);
+                    }
+
+                    , 800);
+                if (video) video.currentTime=0;
+            });
+
+        // --- 2. NON-LINEAR SCROLL CONTROL ---
+        window.addEventListener('scroll', ()=> {
+                const trackRect=track.getBoundingClientRect();
+                const trackHeight=track.offsetHeight;
+                const windowHeight=window.innerHeight;
+
+                // distance scrolled *into* the track
+                const scrolled=-trackRect.top;
+                const scrollableDist=trackHeight - windowHeight;
+
+                if (scrolled > 50) {
+                    scrollHint.style.opacity='0';
+                }
+
+                else {
+                    scrollHint.style.opacity='1';
+                }
+
+                if (video.duration) {
+                    // 1. Raw Loading Progress (Linear)
+                    let rawProgress=scrolled / scrollableDist;
+                    if (rawProgress < 0) rawProgress=0;
+                    if (rawProgress > 1) rawProgress=1;
+
+                    // 2. Easing Function: Cubic In
+                    // This makes the video play SLOWLY at first (low slope) and FAST at the end (steep slope)
+                    // Curve: y = x^3
+                    let easedProgress=Math.pow(rawProgress, 3);
+
+                    video.pause();
+                    video.currentTime=video.duration * easedProgress;
+
+                    // 3. Parallax "Swish Up" Effect
+                    // When we get near the end (e.g., last 10%), pull the content up faster
+                    // to make it feel like it's "swishing" over the ending video.
+                    /*
+                if (rawProgress > 0.85) {
+                    // Calculate a lift. e.g. move up by 100px extra
+                    // Map 0.85->1.0 to 0px->-150px
+                    const swishFactor = (rawProgress - 0.85) / 0.15; // 0 to 1
+                    const lift = swishFactor * -150; 
+                    mainContent.style.transform = `translateY(${lift}px)`;
+                } else {
+                    mainContent.style.transform = `translateY(0)`;
+                }
+                */
+                    // Actually, simple Parallax for the whole section feels more "WorldQuant"
+                    // Let's pull the content up slightly as we scroll (negative parallax)
+                    // Or just keep it natural but let the *Video* acceleration do the visual trick.
+
+                    // User said: "Second page swishes up".
+                    // I will enable the lift near the end.
+                    if (mainContent) {
+                        if (rawProgress > 0.8) {
+                            const swishFactor=(rawProgress - 0.8) / 0.2;
+                            // Lift it up to cover the video "early"
+                            const lift=swishFactor * -100;
+
+                            mainContent.style.transform=`translateY($ {
+                                    lift
+                                }
+
+                                px)`;
+                        }
+
+                        else {
+                            mainContent.style.transform=`translateY(0)`;
+                        }
+                    }
+                }
+            });
+
+
+
+        /* Network Background + Stars */
+        .network-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        /* Assuming user wants the Network bg for this section. If deleted, it will show black. */
+        .bg-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.5;
+            /* Darken for readability */
+        }
+
+        #star-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            mix-blend-mode: screen;
+        }
+
+        /* Content Overlay */
+        .content-inner {
+            position: relative;
+            z-index: 5;
+            padding: 100px 10%;
+            min-height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
-            background-color: #5c6bc0; /* Lighter indigo for nav */
         }
-        nav a {
+
+        /* Typography */
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 5rem;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #fff, var(--gold-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 4px 30px rgba(0, 0, 0, 0.8);
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 50px;
+            font-weight: 300;
+            border-left: 4px solid var(--gold);
+            padding-left: 20px;
+        }
+
+        /* Navigation Links (Button Style) */
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 80px;
+        }
+
+        .nav-clean {
+            font-size: 1rem;
             color: #fff;
-            padding: 15px;
+            text-decoration: none;
+            letter-spacing: 2px;
+            border-bottom: 1px solid transparent;
+            transition: all 0.3s;
+            padding-bottom: 5px;
+        }
+
+        .nav-clean:hover {
+            color: var(--gold);
+            border-bottom: 1px solid var(--gold);
+        }
+
+        /* Project Cards */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .project-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            backdrop-filter: blur(5px);
+            transition: 0.3s;
+        }
+
+        /* --- TOP HEADER BAR --- */
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: #000;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 5%;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .brand-name {
+            font-family: 'Playfair Display', serif;
+            color: #fff;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            font-weight: 700;
             text-decoration: none;
         }
-        nav a:hover {
-            background-color: #7986cb; /* Even lighter indigo on hover */
-        }
-        .container {
-            width: 80%;
-            margin: auto;
-            overflow: hidden;
-	 padding-bottom: 100px; 
-        }
-        .profile-pic {
-    		width: 200px;  /* Set the desired width */
-    		height: auto;  /* Adjust height proportionally */
-    		display: block;
-    		margin: 20px auto;
-    		border-radius: 0; /* Remove rounded corners */
-	}
 
-        section {
-            margin: 20px 0;
+        .top-nav {
+            display: flex;
+            gap: 30px;
         }
-        h2 {
-            color: #333;
-            text-align: center;
+
+        .top-nav a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
         }
-        footer {
-            background-color: #3949ab; /* Same as header */
-            color: #fff;
-            text-align: center;
-            padding: 10px 0;
-            bottom: 0;
+
+        .top-nav a:hover {
+            color: var(--gold);
+        }
+
+        /* Adjust Nav in Main Content to be hidden or different since we have top bar now */
+        /* Actually, user might want duplication or just removal. PROPOSAL: Keep simple top nav for access. */
+
+        .project-card:hover {
+            border-color: var(--gold);
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-5px);
+        }
+
+        .project-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #eee;
+        }
+
+        .project-card p {
+            font-size: 0.95rem;
+            color: #aaa;
+            line-height: 1.6;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+                transform: translateY(0);
+            }
+
+            40% {
+                transform: translateY(-10px);
+            }
+
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        /* --- Helper for scroll logic --- */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-        }
-        .projects-list {
-            list-style: none;
-            padding: 0;
-        }
-        .projects-list li {
-            background-color: #fff;
-            margin: 10px 0;
-            padding: 15px;
-            border-radius: 5px;
-            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+            height: 100%;
+            background: #000;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--gold);
+            letter-spacing: 5px;
+            transition: opacity 1s;
         }
     </style>
 </head>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var user = 'j563yu';
-        var domain = 'uwaterloo.ca';
-        var element = document.getElementById('email');
-        element.innerHTML = '<a href="mailto:' + user + '@' + domain + '">' + user + '@' + domain + '</a>';
-    });
-</script>
+
 <body>
-    <header>
-        <h1>Vivian (Jingcheng) Yu</h1>
-        <p>Welcome to my academic website</p>
+
+    <!-- Loader -->
+    <div class="loader" id="loader">WELCOME TO MY PAGE</div>
+
+    <header class="top-bar">
+        <div class="brand-name">VIVIAN (JINGCHENG) YU</div>
+        <nav class="top-nav">
+            <a href="Vivian_Yu_CV.pdf" target="_blank">CV</a>
+            <a href="#about">ABOUT</a>
+            <a href="#research">RESEARCH</a>
+            <a href="#contact">CONTACT</a>
+        </nav>
     </header>
 
-    <nav>
-        <a href="#about">About Me</a>
-        <a href="#projects">Projects</a>
-        <a href="#contact">Contact</a>
-    </nav>
-
-    <div class="container">
-        <section id="about">
-            <h2>About Me</h2>
-            <img src="Photo.jpg" alt="Your Picture" class="profile-pic">
-            <p>Hello! I am Vivian (Jingcheng) Yu, a Ph.D. student in Actuarial Science at the University of Waterloo, specializing in risk management and finance. My academic focus is on developing innovative strategies to enhance financial stability and risk assessment in markets, aiming to bridge theoretical research with practical industry applications.</p>
-            <p>You can view my full CV by clicking <a href="CV.pdf" target="_blank">here</a>.</p>
-        </section>
-
-        <section id="projects">
-            <h2>Projects</h2>
-            <ul class="projects-list">
-                <li>
-                    <h3>Project Title 1</h3>
-                    <p>Project description coming soon...</p>
-                </li>
-                <li>
-                    <h3>Project Title 2</h3>
-                    <p>Details about this project will be added shortly.</p>
-                </li>
-            </ul>
-        </section>
-
-        <section id="contact">
-            <h2>Contact</h2>
-            <p>If you'd like to get in touch, feel free to <a href="mailto:j563yu@uwaterloo.ca">email me</a>.</p>
-        </section>
+    <!-- PAGE 1: HERO (STICKY VIDEO TRACK) -->
+    <div class="video-track" id="video-track">
+        <div class="sticky-wrapper" style="position: sticky; top: 0; height: 100vh; overflow: hidden; z-index: -1;">
+            <!-- VIDEO: Combined Spliced Liquid Gold (Seamless Trim, H.264) -->
+            <video muted playsinline id="hero-video" preload="metadata"
+                style="width: 100%; height: 100vh; object-fit: cover;">
+                <source src="combined_hero.mp4" type="video/mp4">
+            </video>
+            <div class="scroll-hint" id="scroll-hint">SCROLL TO FLOW</div>
+        </div>
     </div>
 
-    <footer>
-        <p>&copy; 2024 Jingcheng Yu. All rights reserved.</p>
-    </footer>
+    <!-- MAIN CONTENT CONTAINER (Unified Background) -->
+    <div class="main-content-wrapper" id="main-content"
+        style="position: relative; overflow: hidden; min-height: 100vh; display: flex; flex-direction: column;">
+
+        <!-- SHARED BACKGROUND: Video + Canvas Stars -->
+        <div class="shared-bg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;">
+            <!-- 1. Pulsating Video -->
+            <video autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: cover; opacity: 0.6;">
+                <source src="Video_Generation_Pulsating_Nodes_Animation.mp4" type="video/mp4">
+            </video>
+            <!-- 2. Dark Overlay -->
+            <div
+                style="position: absolute; top:0; left:0; width:100%; height:100%; background: linear-gradient(to bottom, rgba(0,0,0,0.9), rgba(0,0,0,0.6));">
+            </div>
+            <!-- 3. Star Canvas -->
+            <canvas id="star-canvas"
+                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; mix-blend-mode: screen;"></canvas>
+        </div>
+
+        <!-- CONTENT (Scrolls over the fixed/absolute bg) -->
+        <div class="content-inner" style="z-index: 2; width: 100%; padding-bottom: 60px; flex: 1;">
+
+            <!-- GLASS PROFILE CARD -->
+            <div style="
+                    display: flex; 
+                    align-items: center; 
+                    justify-content: space-between; 
+                    gap: 40px; 
+                    margin-bottom: 50px; 
+                    background: rgba(255, 255, 255, 0.03); 
+                    border: 1px solid rgba(212, 175, 55, 0.2); 
+                    padding: 40px; 
+                    border-radius: 15px; 
+                    backdrop-filter: blur(5px);
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                 ">
+                <!-- Text Side -->
+                <div style="flex: 1; min-width: 0;">
+                    <h1 style="margin-top: 0; margin-bottom: 10px; font-size: 3.2rem; line-height: 1.1; color: #fff;">
+                        Vivian (Jingcheng) Yu</h1>
+                    <p class="subtitle" style="margin-bottom: 0; font-size: 1.1rem; color: var(--gold-light);">Ph.D.
+                        Researcher | Submodular Risk Measures & Financial Stability</p>
+                </div>
+
+                <!-- Photo Side -->
+                <div style="flex-shrink: 0;">
+                    <!-- FENG SHUI ADJUSTMENT: "Shining Pearl" (Ming Zhu Chu Hai) -->
+                    <!-- 1. No Border (No "Cage/Prison" - 囚) -->
+                    <!-- 2. Radiant Glow (Metal/Gold/White Energy Radiating Outward) -->
+                    <!-- 3. Round Shape (Metal Element - Jin) -->
+                    <!-- 4. Background adjusted to warmer tone: #B0AAA0 (Per user request) -->
+                    <img src="Photo.jpg" alt="Vivian Yu"
+                        style="width: 140px; height: 140px; border-radius: 50%; background-color: #B0AAA0; object-fit: contain; display: block; box-shadow: 0 0 20px rgba(255, 255, 255, 0.6), 0 0 50px rgba(212, 175, 55, 0.4);">
+                </div>
+            </div>
+
+            <!-- PROFILE -->
+            <div id="about" style="margin-bottom: 80px;">
+                <h2
+                    style="color: var(--gold); font-family: 'Playfair Display'; font-size: 2.5rem; margin-bottom: 30px;">
+                    Profile</h2>
+                <p style="max-width: 800px; color: #ccc; line-height: 1.8; margin-bottom: 40px; font-size: 1.1rem;">
+                    I am a Ph.D. Candidate in Actuarial Science at the <strong>University of Waterloo</strong>,
+                    specializing in the intersection of financial stability, risk management, and theoretical
+                    mathematics. My research focuses on <strong>quantitative risk management and stochastic
+                        optimization</strong>,
+                    developing robust frameworks that bridge abstract mathematical theory with data-driven market
+                    applications.
+                    <br><br>
+                    With a Master of Financial Engineering from <strong>UCLA</strong> and professional experience at
+                    <strong>Ernst & Young</strong> and the <strong>California Department of Insurance</strong>, I
+                    combine rigorous academic discipline with industry-grade problem solving.
+                </p>
+
+                <!-- Education & Certs Grid -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 50px;">
+                    <div>
+                        <h3
+                            style="color: #fff; border-bottom: 1px solid var(--gold); padding-bottom: 10px; margin-bottom: 20px;">
+                            Education</h3>
+                        <div style="margin-bottom: 20px;">
+                            <h4 style="color: var(--gold-light); font-size: 1.1rem;">University of Waterloo</h4>
+                            <p style="color: #aaa; font-size: 0.9rem;">Ph.D. in Actuarial Science | 2024 - Present
+                            </p>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--gold-light); font-size: 1.1rem;">UCLA</h4>
+                            <p style="color: #aaa; font-size: 0.9rem;">Master of Financial Engineering | 2022</p>
+                            <p style="color: #666; font-size: 0.8rem;">GPA 3.82/4.0</p>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--gold-light); font-size: 1.1rem;">University of Manitoba</h4>
+                            <p style="color: #aaa; font-size: 0.9rem;">B.S. Actuarial Math | 2019</p>
+                            <p style="color: #666; font-size: 0.8rem;">First Class Honor</p>
+                        </div>
+                    </div>
+                    <div>
+                        <h3
+                            style="color: #fff; border-bottom: 1px solid var(--gold); padding-bottom: 10px; margin-bottom: 20px;">
+                            Credentials</h3>
+                        <ul style="list-style: none; padding: 0; color: #ccc; line-height: 2;">
+                            <li><span style="color: var(--gold);">★</span> FSA (Fellow of Society of Actuaries)</li>
+                            <li><span style="color: var(--gold);">★</span> CERA (Chartered Enterprise Risk Analyst)
+                            </li>
+                            <li><span style="color: var(--gold);">★</span> CFA Level II Candidate</li>
+                        </ul>
+                        <h3
+                            style="color: #fff; border-bottom: 1px solid var(--gold); padding-bottom: 10px; margin-bottom: 20px; margin-top: 30px;">
+                            Technical Skills</h3>
+                        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                            <span
+                                style="border: 1px solid #444; padding: 5px 10px; font-size: 0.8rem; border-radius: 4px;">Python</span>
+                            <span
+                                style="border: 1px solid #444; padding: 5px 10px; font-size: 0.8rem; border-radius: 4px;">R
+                                (Tidyverse)</span>
+                            <span
+                                style="border: 1px solid #444; padding: 5px 10px; font-size: 0.8rem; border-radius: 4px;">SQL</span>
+                            <span
+                                style="border: 1px solid #444; padding: 5px 10px; font-size: 0.8rem; border-radius: 4px;">TensorFlow</span>
+                            <span
+                                style="border: 1px solid #444; padding: 5px 10px; font-size: 0.8rem; border-radius: 4px;">Stochastic
+                                Calculus</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EXPERIENCE -->
+            <div id="experience" style="margin-bottom: 100px;">
+                <h2
+                    style="color: var(--gold); font-family: 'Playfair Display'; font-size: 2.5rem; margin-bottom: 30px;">
+                    Professional Experience</h2>
+                <div class="project-card" style="margin-bottom: 20px;">
+                    <h3 style="font-size: 1.3rem;">Ernst & Young (EY)</h3>
+                    <p style="color: var(--gold); font-size: 0.8rem; margin-bottom: 10px;">ACTUARIAL CONSULTANT |
+                        NEW
+                        YORK | 2023</p>
+                    <p style="font-size: 0.95rem;">Applied algorithmic optimization techniques (Simulated Annealing,
+                        Genetic Algorithms) to optimize portfolios with liabilities, successfully reducing financing
+                        costs by 50%.</p>
+                </div>
+
+                <div class="project-card" style="margin-bottom: 20px;">
+                    <h3 style="font-size: 1.3rem;">California Department of Insurance</h3>
+                    <p style="color: var(--gold); font-size: 0.8rem; margin-bottom: 10px;">ACTUARIAL STUDENT
+                        ASSISTANT |
+                        LOS ANGELES | 2022</p>
+                    <p style="font-size: 0.95rem;">Conducted in-depth research on ISO filings and redeveloped the
+                        Class
+                        Plan Application using VBA, achieving a 30% reduction in processing time.</p>
+                </div>
+            </div>
+
+            <!-- RESEARCH (Now Continuous) -->
+            <div id="research">
+                <h2
+                    style="color: var(--gold); font-family: 'Playfair Display'; font-size: 2.5rem; margin-bottom: 40px;">
+                    Research Projects</h2>
+
+                <div class="projects-grid">
+                    <div class="project-card">
+                        <h3>Submodular Risk Measures</h3>
+                        <p
+                            style="color: var(--gold); margin-bottom: 15px; font-size: 0.8rem; text-transform: uppercase;">
+                            Working Paper</p>
+                        <p>Developed a theoretical framework to study submodularity for cash-invariant and convex
+                            law-invariant risk measures. Clarified structural links to Choquet-type representations.
+                        </p>
+                    </div>
+                    <div class="project-card">
+                        <h3>Portfolio Design</h3>
+                        <p
+                            style="color: var(--gold); margin-bottom: 15px; font-size: 0.8rem; text-transform: uppercase;">
+                            UCLA Capstone</p>
+                        <p>Engineered a portfolio analysis framework using Classification and Decision Tree (CART)
+                            models
+                            across 14 asset classes. Identified critical shifts in feature importance.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div> <!-- End content-inner -->
+
+
+        <!-- Footer: Full Width, Bottom -->
+        <footer
+            style="width: 100%; border-top: 1px solid rgba(255,255,255,0.1); padding: 40px 0; text-align: center; color: #666; font-size: 0.8rem; background-color: #000; position: relative; z-index: 100; margin-top: auto;">
+            <p>&copy; 2025 Vivian (Jingcheng) Yu. All rights reserved.</p>
+            <div style="margin-top: 15px;">
+                <a href="#"
+                    style="color: #666; text-decoration: none; border-bottom: 1px dotted #444; padding-bottom: 2px; transition: color 0.3s;"
+                    onmouseover="this.style.color='#d4af37'" onmouseout="this.style.color='#666'">Back to Top</a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // --- 1. LOADER & VIDEO INIT ---
+        const video = document.getElementById('hero-video');
+        const loader = document.getElementById('loader');
+        const scrollHint = document.getElementById('scroll-hint');
+        const track = document.getElementById('video-track');
+        const mainContent = document.getElementById('main-content');
+
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 1000);
+            }, 800);
+            if (video) video.currentTime = 0;
+        });
+
+        // --- 2. STICKY SCROLL logic ---
+        window.addEventListener('scroll', () => {
+            const trackRect = track.getBoundingClientRect();
+            const trackHeight = track.offsetHeight;
+            const windowHeight = window.innerHeight;
+
+            // distance scrolled *into* the track
+            // When track.top is 0, we are at start.
+            // When track.bottom is windowHeight, we are at end.
+
+            // Amount of track that has passed the top of viewport:
+            const scrolled = -trackRect.top;
+            const scrollableDist = trackHeight - windowHeight;
+
+            if (scrolled > 50) {
+                if (scrollHint) scrollHint.style.opacity = '0';
+            } else {
+                if (scrollHint) scrollHint.style.opacity = '1';
+            }
+
+            if (video && video.duration) {
+                let rawProgress = scrolled / scrollableDist;
+
+                // Clamp
+                // --- 1:1 LINEAR MAPPING ---
+                // User wants: "Scroll down -> Video plays -> Reach 2nd screen -> Video just finishes"
+                // This means Progress MUST match Scroll exactly (1.0 = 1.0).
+
+                if (video.readyState >= 1 && Number.isFinite(video.duration) && video.duration > 0) {
+                    video.pause();
+                    video.currentTime = video.duration * rawProgress;
+                }
+
+
+                // --- 3. PARALLAX LIFT (Seamless Transition) ---
+                // As the video nears completion (or user scrolls past), pull the content up safely.
+                // Since track is shorter now (150vh), 'scrolled' reaches end faster.
+                // Let's just use standard flow: The main content naturally follows the track.
+                // But to make it "cover" the video at the end, we can add a small negative margin or transform?
+                // Actually, simply reducing the track height (done in CSS) solves 90% of this.
+                // But let's add a small 'swish' to ensure it's distinct.
+
+                if (mainContent) {
+                    // No aggressive lift needed if track height is correct. 
+                    // Just let it scroll naturally into view.
+                    mainContent.style.transform = `translateY(0)`;
+                }
+            }
+        });
+
+
+        // --- 3. STAR ANIMATION ---
+        const canvas = document.getElementById('star-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let stars = [];
+
+        function resize() {
+            // Target the unified Shared Background container
+            const parent = document.querySelector('.shared-bg');
+            if (parent) {
+                width = canvas.width = parent.offsetWidth;
+                height = canvas.height = parent.offsetHeight;
+                initStars();
+            }
+        }
+        window.addEventListener('resize', resize);
+
+        class Star {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.size = Math.random() * 2 + 1;
+                this.gleam = Math.random() * Math.PI;
+                this.speed = Math.random() * 0.05 + 0.01;
+            }
+            draw() {
+                this.gleam += this.speed;
+                const opacity = (Math.sin(this.gleam) + 1) / 2;
+
+                ctx.beginPath();
+                ctx.shadowBlur = 5;
+                ctx.shadowColor = "rgba(212, 175, 55, 0.8)";
+                ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
+                ctx.arc(this.x, this.y, this.size * 0.5, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            }
+        }
+
+        function initStars() {
+            stars = [];
+            const count = 100;
+            for (let i = 0; i < count; i++) stars.push(new Star());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            stars.forEach(s => s.draw());
+            requestAnimationFrame(animate);
+        }
+
+        // Init
+        setTimeout(() => {
+            resize();
+            animate();
+        }, 1000);
+
+    </script>
 </body>
+
 </html>
