@@ -5,16 +5,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vivian (Jingcheng) Yu | Ph.D. Researcher</title>
+    <meta name="description"
+        content="Vivian (Jingcheng) Yu — Ph.D. Candidate in Actuarial Science at the University of Waterloo. Research in risk measures, e-backtesting, and financial stability.">
+    <link rel="icon"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23050505'/%3E%3Ctext x='32' y='42' font-family='Georgia' font-size='28' fill='%23d4af37' text-anchor='middle'%3EVY%3C/text%3E%3C/svg%3E">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:wght@700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,700;1,400&display=swap"
         rel="stylesheet">
     <style>
         :root {
             --gold: #d4af37;
             --gold-light: #fadd76;
-            --dark-bg: #050505;
+            --gold-dim: rgba(212, 175, 55, 0.35);
+            --bg: #050505;
+            --ink: #e8e6e1;
+            --muted: #a9a49a;
         }
 
         * {
@@ -23,355 +30,917 @@
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--dark-bg);
-            color: #fff;
+            background-color: var(--bg);
+            color: var(--ink);
             overflow-x: hidden;
-            /* Removed fixed height 400vh to allow natural flow */
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* --- 1. STICKY HERO TRACK --- */
-        /* Increased to 350vh to allow for "Slow Start" */
-        .video-track {
-            position: relative;
-            width: 100%;
-            height: 350vh;
-            /* RESTORED: Long track for 1:1 linear scrubbing control */
-            background-color: #000;
-            z-index: 1;
+        ::selection {
+            background: var(--gold);
+            color: #000;
         }
 
-        .sticky-wrapper {
-            position: sticky;
-            top: 0;
-            width: 100%;
-            height: 100vh;
-            overflow: hidden;
+        ::-webkit-scrollbar {
+            width: 10px;
         }
 
-        #hero-video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
         }
 
-        /* Scroll Hint */
-        .scroll-hint {
-            position: absolute;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 1rem;
-            letter-spacing: 5px;
-            color: #fff;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
-            z-index: 10;
-            animation: bounce 2s infinite;
+        ::-webkit-scrollbar-thumb {
+            background: #2c2618;
+            border-radius: 5px;
         }
 
-        /* --- 2. MAIN CONTENT (Naturally follows video track) --- */
-        .main-content-wrapper {
-            position: relative;
-            z-index: 20;
-            background-color: #000;
-            box-shadow: 0 -50px 100px #000;
-            /* Will be animated via JS for the "Swish" effect */
-            transition: transform 0.1s linear;
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gold-dim);
         }
 
-        /* ... [Keeping styles] ... */
-
-        /* ... [Cut to JS] ... */
-
-        <script> // --- 1. LOADER & VIDEO INIT ---
-        const video=document.getElementById('hero-video');
-        const loader=document.getElementById('loader');
-        const scrollHint=document.getElementById('scroll-hint');
-        const track=document.getElementById('video-track');
-        const mainContent=document.getElementById('main-content');
-
-        window.addEventListener('load', ()=> {
-                setTimeout(()=> {
-                        loader.style.opacity='0';
-                        setTimeout(()=> loader.style.display='none', 1000);
-                    }
-
-                    , 800);
-                if (video) video.currentTime=0;
-            });
-
-        // --- 2. NON-LINEAR SCROLL CONTROL ---
-        window.addEventListener('scroll', ()=> {
-                const trackRect=track.getBoundingClientRect();
-                const trackHeight=track.offsetHeight;
-                const windowHeight=window.innerHeight;
-
-                // distance scrolled *into* the track
-                const scrolled=-trackRect.top;
-                const scrollableDist=trackHeight - windowHeight;
-
-                if (scrolled > 50) {
-                    scrollHint.style.opacity='0';
-                }
-
-                else {
-                    scrollHint.style.opacity='1';
-                }
-
-                if (video.duration) {
-                    // 1. Raw Loading Progress (Linear)
-                    let rawProgress=scrolled / scrollableDist;
-                    if (rawProgress < 0) rawProgress=0;
-                    if (rawProgress > 1) rawProgress=1;
-
-                    // 2. Easing Function: Cubic In
-                    // This makes the video play SLOWLY at first (low slope) and FAST at the end (steep slope)
-                    // Curve: y = x^3
-                    let easedProgress=Math.pow(rawProgress, 3);
-
-                    video.pause();
-                    video.currentTime=video.duration * easedProgress;
-
-                    // 3. Parallax "Swish Up" Effect
-                    // When we get near the end (e.g., last 10%), pull the content up faster
-                    // to make it feel like it's "swishing" over the ending video.
-                    /*
-                if (rawProgress > 0.85) {
-                    // Calculate a lift. e.g. move up by 100px extra
-                    // Map 0.85->1.0 to 0px->-150px
-                    const swishFactor = (rawProgress - 0.85) / 0.15; // 0 to 1
-                    const lift = swishFactor * -150; 
-                    mainContent.style.transform = `translateY(${lift}px)`;
-                } else {
-                    mainContent.style.transform = `translateY(0)`;
-                }
-                */
-                    // Actually, simple Parallax for the whole section feels more "WorldQuant"
-                    // Let's pull the content up slightly as we scroll (negative parallax)
-                    // Or just keep it natural but let the *Video* acceleration do the visual trick.
-
-                    // User said: "Second page swishes up".
-                    // I will enable the lift near the end.
-                    if (mainContent) {
-                        if (rawProgress > 0.8) {
-                            const swishFactor=(rawProgress - 0.8) / 0.2;
-                            // Lift it up to cover the video "early"
-                            const lift=swishFactor * -100;
-
-                            mainContent.style.transform=`translateY($ {
-                                    lift
-                                }
-
-                                px)`;
-                        }
-
-                        else {
-                            mainContent.style.transform=`translateY(0)`;
-                        }
-                    }
-                }
-            });
-
-
-
-        /* Network Background + Stars */
-        .network-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
+        /* ---------- Fixed background layers ---------- */
+        #net-canvas {
+            position: fixed;
+            inset: 0;
             width: 100%;
             height: 100%;
             z-index: 0;
+            pointer-events: none;
         }
 
-        /* Assuming user wants the Network bg for this section. If deleted, it will show black. */
-        .bg-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0.5;
-            /* Darken for readability */
+        .nebula {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(110px);
+            z-index: 0;
+            pointer-events: none;
+            opacity: .55;
         }
 
-        #star-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+        .nebula-a {
+            width: 55vmax;
+            height: 55vmax;
+            top: -20vmax;
+            right: -15vmax;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.10), transparent 60%);
+            animation: drift-a 26s ease-in-out infinite alternate;
+        }
+
+        .nebula-b {
+            width: 45vmax;
+            height: 45vmax;
+            bottom: -18vmax;
+            left: -12vmax;
+            background: radial-gradient(circle, rgba(120, 90, 20, 0.09), transparent 60%);
+            animation: drift-b 32s ease-in-out infinite alternate;
+        }
+
+        @keyframes drift-a {
+            to {
+                transform: translate3d(-8vmax, 6vmax, 0) scale(1.15);
+            }
+        }
+
+        @keyframes drift-b {
+            to {
+                transform: translate3d(7vmax, -5vmax, 0) scale(1.1);
+            }
+        }
+
+        .vignette {
+            position: fixed;
+            inset: 0;
             z-index: 1;
+            pointer-events: none;
+            background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.55) 100%);
+        }
+
+        /* ---------- Cursor glow (desktop) ---------- */
+        #cursor-glow {
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.07), transparent 60%);
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            pointer-events: none;
             mix-blend-mode: screen;
         }
 
-        /* Content Overlay */
-        .content-inner {
-            position: relative;
-            z-index: 5;
-            padding: 100px 10%;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+        /* ---------- Scroll progress ---------- */
+        #progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 2px;
+            width: 0;
+            background: linear-gradient(90deg, var(--gold), var(--gold-light));
+            box-shadow: 0 0 12px var(--gold-dim);
+            z-index: 1200;
         }
 
-        /* Typography */
-        h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 5rem;
-            line-height: 1.1;
-            margin-bottom: 20px;
-            background: linear-gradient(to right, #fff, var(--gold-light));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 4px 30px rgba(0, 0, 0, 0.8);
-        }
-
-        .subtitle {
-            font-size: 1.5rem;
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 50px;
-            font-weight: 300;
-            border-left: 4px solid var(--gold);
-            padding-left: 20px;
-        }
-
-        /* Navigation Links (Button Style) */
-        .nav-links {
-            display: flex;
-            gap: 30px;
-            margin-bottom: 80px;
-        }
-
-        .nav-clean {
-            font-size: 1rem;
-            color: #fff;
-            text-decoration: none;
-            letter-spacing: 2px;
-            border-bottom: 1px solid transparent;
-            transition: all 0.3s;
-            padding-bottom: 5px;
-        }
-
-        .nav-clean:hover {
-            color: var(--gold);
-            border-bottom: 1px solid var(--gold);
-        }
-
-        /* Project Cards */
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
-        }
-
-        .project-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 40px;
-            backdrop-filter: blur(5px);
-            transition: 0.3s;
-        }
-
-        /* --- TOP HEADER BAR --- */
+        /* ---------- Top bar ---------- */
         .top-bar {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 60px;
-            background-color: #000;
-            z-index: 1000;
+            z-index: 1100;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 5%;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 18px 5%;
+            transition: background .4s, border-color .4s, padding .4s;
+            border-bottom: 1px solid transparent;
         }
 
-        .brand-name {
+        .top-bar.scrolled {
+            background: rgba(5, 5, 5, 0.72);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.18);
+            padding: 12px 5%;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .brand .mono {
+            width: 38px;
+            height: 38px;
+            border: 1px solid var(--gold-dim);
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            font-family: 'Playfair Display', serif;
+            color: var(--gold);
+            font-size: .85rem;
+            letter-spacing: 1px;
+            transition: box-shadow .3s, transform .3s;
+        }
+
+        .brand:hover .mono {
+            box-shadow: 0 0 18px var(--gold-dim);
+            transform: rotate(-8deg);
+        }
+
+        .brand .name {
             font-family: 'Playfair Display', serif;
             color: #fff;
-            font-size: 1.1rem;
-            letter-spacing: 1px;
-            font-weight: 700;
-            text-decoration: none;
+            font-size: 1rem;
+            letter-spacing: 1.5px;
         }
 
         .top-nav {
             display: flex;
-            gap: 30px;
+            align-items: center;
+            gap: 28px;
         }
 
         .top-nav a {
-            color: rgba(255, 255, 255, 0.7);
+            color: rgba(255, 255, 255, 0.65);
             text-decoration: none;
-            font-size: 0.8rem;
-            letter-spacing: 1px;
-            transition: color 0.3s;
-            font-family: 'Inter', sans-serif;
+            font-size: .78rem;
+            letter-spacing: 2px;
             font-weight: 500;
+            position: relative;
+            padding: 4px 0;
+            transition: color .3s;
         }
 
-        .top-nav a:hover {
+        .top-nav a::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 1px;
+            background: var(--gold);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform .35s cubic-bezier(.22, 1, .36, 1);
+        }
+
+        .top-nav a:hover,
+        .top-nav a.active {
+            color: var(--gold-light);
+        }
+
+        .top-nav a:hover::after,
+        .top-nav a.active::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .top-nav .cv-btn {
+            border: 1px solid var(--gold-dim);
+            border-radius: 999px;
+            padding: 8px 20px;
+            color: var(--gold-light);
+            transition: background .3s, color .3s, box-shadow .3s;
+        }
+
+        .top-nav .cv-btn::after {
+            display: none;
+        }
+
+        .top-nav .cv-btn:hover {
+            background: var(--gold);
+            color: #000;
+            box-shadow: 0 0 24px var(--gold-dim);
+        }
+
+        /* ---------- Layout ---------- */
+        .wrap {
+            position: relative;
+            z-index: 5;
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 0 6%;
+        }
+
+        section {
+            padding: 110px 0 30px;
+            scroll-margin-top: 70px;
+        }
+
+        /* ---------- Hero ---------- */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            padding-top: 80px;
+        }
+
+        .eyebrow {
+            display: flex;
+            align-items: center;
+            gap: 16px;
             color: var(--gold);
+            font-size: .78rem;
+            letter-spacing: 4px;
+            font-weight: 500;
+            margin-bottom: 28px;
         }
 
-        /* Adjust Nav in Main Content to be hidden or different since we have top bar now */
-        /* Actually, user might want duplication or just removal. PROPOSAL: Keep simple top nav for access. */
-
-        .project-card:hover {
-            border-color: var(--gold);
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateY(-5px);
+        .eyebrow::before {
+            content: '';
+            width: 48px;
+            height: 1px;
+            background: linear-gradient(90deg, var(--gold), transparent);
         }
 
-        .project-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-            color: #eee;
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 8vw, 5.6rem);
+            line-height: 1.05;
+            font-weight: 700;
+            margin-bottom: 26px;
+            background: linear-gradient(110deg, #fff 20%, var(--gold-light) 42%, #fff 58%, var(--gold) 80%);
+            background-size: 220% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: sheen 7s linear infinite;
         }
 
-        .project-card p {
-            font-size: 0.95rem;
-            color: #aaa;
-            line-height: 1.6;
+        @keyframes sheen {
+            to {
+                background-position: 220% center;
+            }
         }
 
-        @keyframes bounce {
+        .typeline {
+            font-size: clamp(1.05rem, 2.4vw, 1.5rem);
+            font-weight: 300;
+            color: var(--muted);
+            border-left: 3px solid var(--gold);
+            padding-left: 18px;
+            margin-bottom: 44px;
+            min-height: 2.2em;
+            display: flex;
+            align-items: center;
+            gap: .5ch;
+        }
+
+        .typeline .typed {
+            color: var(--gold-light);
+            font-weight: 400;
+        }
+
+        .caret {
+            display: inline-block;
+            width: 2px;
+            height: 1.25em;
+            background: var(--gold);
+            animation: blink 1s steps(1) infinite;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        .hero-cta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            margin-bottom: 46px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 34px;
+            border-radius: 999px;
+            font-size: .82rem;
+            letter-spacing: 2.5px;
+            font-weight: 600;
+            text-decoration: none;
+            font-family: inherit;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: transform .3s, box-shadow .3s, background .3s, color .3s;
+        }
+
+        .btn-gold {
+            background: linear-gradient(120deg, var(--gold), var(--gold-light));
+            color: #0a0800;
+        }
+
+        .btn-gold:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 34px rgba(212, 175, 55, 0.35);
+        }
+
+        .btn-ghost {
+            border: 1px solid var(--gold-dim);
+            color: var(--gold-light);
+        }
+
+        .btn-ghost:hover {
+            background: rgba(212, 175, 55, 0.12);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
+        }
+
+        .badge-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .badge {
+            font-size: .72rem;
+            letter-spacing: 2px;
+            color: var(--gold-light);
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            background: rgba(212, 175, 55, 0.06);
+            padding: 7px 16px;
+            border-radius: 999px;
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 34px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.45);
+            font-size: .7rem;
+            letter-spacing: 4px;
+            text-align: center;
+        }
+
+        .scroll-hint .chev {
+            display: block;
+            margin: 10px auto 0;
+            width: 10px;
+            height: 10px;
+            border-right: 1px solid var(--gold);
+            border-bottom: 1px solid var(--gold);
+            transform: rotate(45deg);
+            animation: dip 1.8s ease-in-out infinite;
+        }
+
+        @keyframes dip {
 
             0%,
-            20%,
-            50%,
-            80%,
+            100% {
+                transform: rotate(45deg) translate(0, 0);
+                opacity: 1;
+            }
+
+            50% {
+                transform: rotate(45deg) translate(6px, 6px);
+                opacity: .3;
+            }
+        }
+
+        /* ---------- Section headers ---------- */
+        .kicker {
+            color: var(--gold);
+            font-size: .74rem;
+            letter-spacing: 4px;
+            font-weight: 600;
+            margin-bottom: 14px;
+        }
+
+        h2.sec-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4.5vw, 2.9rem);
+            color: #fff;
+            margin-bottom: 18px;
+            position: relative;
+            display: inline-block;
+        }
+
+        h2.sec-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -10px;
+            height: 2px;
+            width: 0;
+            background: linear-gradient(90deg, var(--gold), transparent);
+            transition: width 1s cubic-bezier(.22, 1, .36, 1) .2s;
+        }
+
+        .in h2.sec-title::after {
+            width: 100%;
+        }
+
+        .sec-head {
+            margin-bottom: 48px;
+        }
+
+        /* ---------- Reveal ---------- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(36px);
+            transition: opacity .8s cubic-bezier(.22, 1, .36, 1), transform .8s cubic-bezier(.22, 1, .36, 1);
+            transition-delay: var(--d, 0s);
+        }
+
+        .reveal.in {
+            opacity: 1;
+            transform: none;
+        }
+
+        /* ---------- Glass / cards ---------- */
+        .glass {
+            background: rgba(255, 255, 255, 0.035);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            border-radius: 18px;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .card {
+            position: relative;
+            background: rgba(255, 255, 255, 0.035);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            border-radius: 18px;
+            padding: 38px;
+            overflow: hidden;
+            transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(var(--lift, 0));
+            transition: border-color .4s, box-shadow .4s, transform .18s ease-out;
+            will-change: transform;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(520px circle at var(--mx, 50%) var(--my, 50%), rgba(212, 175, 55, 0.13), transparent 45%);
+            opacity: 0;
+            transition: opacity .45s;
+            pointer-events: none;
+        }
+
+        .card:hover {
+            border-color: rgba(212, 175, 55, 0.55);
+            box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55), 0 0 30px rgba(212, 175, 55, 0.07);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card .corner {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(225deg, rgba(212, 175, 55, 0.22), transparent 60%);
+            border-bottom-left-radius: 100%;
+            opacity: 0;
+            transition: opacity .4s;
+            pointer-events: none;
+        }
+
+        .card:hover .corner {
+            opacity: 1;
+        }
+
+        .card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            color: #f2efe8;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .card .tag {
+            display: inline-block;
+            font-size: .68rem;
+            letter-spacing: 2.5px;
+            font-weight: 600;
+            color: var(--gold);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 999px;
+            padding: 5px 14px;
+            margin-bottom: 16px;
+        }
+
+        .card p.desc {
+            font-size: .93rem;
+            color: var(--muted);
+            line-height: 1.75;
+        }
+
+        .card .co {
+            margin-top: 16px;
+            font-size: .8rem;
+            color: #7d7869;
+            font-style: italic;
+        }
+
+        /* ---------- About ---------- */
+        .about-grid {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 52px;
+            align-items: center;
+            padding: 46px;
+        }
+
+        .photo-wrap {
+            position: relative;
+            width: 190px;
+            height: 190px;
+        }
+
+        .photo-wrap .ring {
+            position: absolute;
+            inset: -14px;
+            border-radius: 50%;
+            border: 1px dashed rgba(212, 175, 55, 0.4);
+            animation: spin 26s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .photo-wrap img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: #B0AAA0;
+            object-fit: contain;
+            display: block;
+            box-shadow: 0 0 24px rgba(255, 255, 255, 0.5), 0 0 60px rgba(212, 175, 55, 0.4);
+            animation: floaty 6s ease-in-out infinite;
+        }
+
+        @keyframes floaty {
+
+            0%,
             100% {
                 transform: translateY(0);
             }
 
-            40% {
-                transform: translateY(-10px);
-            }
-
-            60% {
-                transform: translateY(-5px);
+            50% {
+                transform: translateY(-8px);
             }
         }
 
-        /* --- Helper for scroll logic --- */
+        .about-grid .bio {
+            color: #cfcabf;
+            line-height: 1.9;
+            font-size: 1.02rem;
+        }
+
+        .about-grid .bio strong {
+            color: var(--gold-light);
+            font-weight: 500;
+        }
+
+        .duo {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 44px;
+        }
+
+        .duo h3 {
+            color: #fff;
+            font-size: 1.05rem;
+            letter-spacing: 1px;
+            border-bottom: 1px solid var(--gold-dim);
+            padding-bottom: 10px;
+            margin-bottom: 24px;
+        }
+
+        /* timeline */
+        .tl {
+            position: relative;
+            padding-left: 26px;
+        }
+
+        .tl::before {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 6px;
+            bottom: 6px;
+            width: 1px;
+            background: linear-gradient(180deg, var(--gold), rgba(212, 175, 55, 0.05));
+        }
+
+        .tl-item {
+            position: relative;
+            margin-bottom: 26px;
+        }
+
+        .tl-item::before {
+            content: '';
+            position: absolute;
+            left: -26px;
+            top: 5px;
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            background: var(--bg);
+            border: 2px solid var(--gold);
+            box-shadow: 0 0 10px var(--gold-dim);
+        }
+
+        .tl-item h4 {
+            color: var(--gold-light);
+            font-size: 1.02rem;
+            font-weight: 500;
+        }
+
+        .tl-item .meta {
+            color: var(--muted);
+            font-size: .86rem;
+            margin-top: 3px;
+        }
+
+        .tl-item .sub {
+            color: #6f6a5e;
+            font-size: .78rem;
+            margin-top: 2px;
+        }
+
+        .star-list {
+            list-style: none;
+            color: #cfcabf;
+            line-height: 2.1;
+            font-size: .95rem;
+        }
+
+        .star-list .st {
+            color: var(--gold);
+            margin-right: 8px;
+        }
+
+        .chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 6px;
+        }
+
+        .chip {
+            border: 1px solid #3a372e;
+            padding: 7px 14px;
+            font-size: .78rem;
+            border-radius: 6px;
+            color: #cfcabf;
+            transition: border-color .3s, color .3s, transform .3s, box-shadow .3s;
+        }
+
+        .chip:hover {
+            border-color: var(--gold);
+            color: var(--gold-light);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        /* ---------- Grids ---------- */
+        .exp-stack {
+            display: grid;
+            gap: 24px;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 28px;
+        }
+
+        /* ---------- Contact ---------- */
+        .contact-box {
+            text-align: center;
+            padding: 70px 8%;
+        }
+
+        .contact-box h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            color: #fff;
+            margin-bottom: 16px;
+        }
+
+        .contact-box h2 em {
+            font-style: italic;
+            color: var(--gold-light);
+        }
+
+        .contact-box p {
+            color: var(--muted);
+            margin-bottom: 36px;
+            font-size: 1rem;
+        }
+
+        .contact-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            justify-content: center;
+        }
+
+        #toast {
+            position: fixed;
+            bottom: 34px;
+            left: 50%;
+            transform: translate(-50%, 20px);
+            background: rgba(212, 175, 55, 0.95);
+            color: #000;
+            font-size: .8rem;
+            letter-spacing: 1.5px;
+            padding: 11px 26px;
+            border-radius: 999px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .35s, transform .35s;
+            z-index: 1300;
+        }
+
+        #toast.show {
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
+
+        /* ---------- Footer ---------- */
+        footer {
+            position: relative;
+            z-index: 5;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 42px 0 48px;
+            text-align: center;
+            color: #666;
+            font-size: .8rem;
+            margin-top: 80px;
+        }
+
+        footer a {
+            color: #8a8577;
+            text-decoration: none;
+            border-bottom: 1px dotted #444;
+            padding-bottom: 2px;
+            transition: color .3s;
+        }
+
+        footer a:hover {
+            color: var(--gold);
+        }
+
+        /* ---------- Loader ---------- */
         .loader {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            inset: 0;
             background: #000;
-            z-index: 1000;
+            z-index: 2000;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
+            gap: 18px;
+            transition: opacity .7s, visibility .7s;
+        }
+
+        .loader.done {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader .lg-name {
+            font-family: 'Playfair Display', serif;
             color: var(--gold);
-            letter-spacing: 5px;
-            transition: opacity 1s;
+            font-size: 1.1rem;
+            letter-spacing: 8px;
+            animation: fade-up .9s ease both;
+        }
+
+        .loader .lg-line {
+            width: 120px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            animation: grow 1s ease both .15s;
+        }
+
+        @keyframes fade-up {
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+        }
+
+        @keyframes grow {
+            from {
+                transform: scaleX(0);
+            }
+        }
+
+        /* ---------- Responsive ---------- */
+        @media (max-width: 820px) {
+            .top-nav a:not(.cv-btn) {
+                display: none;
+            }
+
+            .brand .name {
+                font-size: .78rem;
+                letter-spacing: 1px;
+            }
+
+            .about-grid {
+                grid-template-columns: 1fr;
+                justify-items: center;
+                text-align: center;
+                gap: 34px;
+                padding: 34px 26px;
+            }
+
+            .card {
+                padding: 28px;
+            }
+
+            #cursor-glow {
+                display: none;
+            }
+        }
+
+        /* ---------- Reduced motion ---------- */
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.001s !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.001s !important;
+            }
+
+            html {
+                scroll-behavior: auto;
+            }
+
+            .reveal {
+                opacity: 1;
+                transform: none;
+            }
         }
     </style>
 </head>
@@ -379,369 +948,531 @@
 <body>
 
     <!-- Loader -->
-    <div class="loader" id="loader">WELCOME TO MY PAGE</div>
+    <div class="loader" id="loader" aria-hidden="true">
+        <div class="lg-name">VIVIAN&nbsp;YU</div>
+        <div class="lg-line"></div>
+    </div>
 
-    <header class="top-bar">
-        <div class="brand-name">VIVIAN (JINGCHENG) YU</div>
+    <!-- Background layers -->
+    <canvas id="net-canvas" aria-hidden="true"></canvas>
+    <div class="nebula nebula-a" aria-hidden="true"></div>
+    <div class="nebula nebula-b" aria-hidden="true"></div>
+    <div class="vignette" aria-hidden="true"></div>
+    <div id="cursor-glow" aria-hidden="true"></div>
+    <div id="progress" aria-hidden="true"></div>
+
+    <!-- Top bar -->
+    <header class="top-bar" id="top-bar">
+        <a class="brand" href="#top">
+            <span class="mono">VY</span>
+            <span class="name">VIVIAN (JINGCHENG) YU</span>
+        </a>
         <nav class="top-nav">
-            <a href="Vivian_Yu_CV.pdf" target="_blank">CV</a>
-            <a href="#about">ABOUT</a>
-            <a href="#research">RESEARCH</a>
-            <a href="#contact">CONTACT</a>
+            <a href="#about" data-nav="about">ABOUT</a>
+            <a href="#experience" data-nav="experience">EXPERIENCE</a>
+            <a href="#research" data-nav="research">RESEARCH</a>
+            <a href="#contact" data-nav="contact">CONTACT</a>
+            <a class="cv-btn" href="Vivian_Yu_CV.pdf" target="_blank" rel="noopener">CV ↓</a>
         </nav>
     </header>
 
-    <!-- PAGE 1: HERO (STICKY VIDEO TRACK) -->
-    <div class="video-track" id="video-track">
-        <div class="sticky-wrapper" style="position: sticky; top: 0; height: 100vh; overflow: hidden; z-index: -1;">
-            <!-- VIDEO: Combined Spliced Liquid Gold (Seamless Trim, H.264) -->
-            <video muted playsinline id="hero-video" preload="metadata"
-                style="width: 100%; height: 100vh; object-fit: cover;">
-                <source src="combined_hero.mp4" type="video/mp4">
-            </video>
-            <div class="scroll-hint" id="scroll-hint">SCROLL TO FLOW</div>
-        </div>
-    </div>
+    <main class="wrap" id="top">
 
-    <!-- MAIN CONTENT CONTAINER (Unified Background) -->
-    <div class="main-content-wrapper" id="main-content"
-        style="position: relative; overflow: hidden; min-height: 100vh; display: flex; flex-direction: column;">
-
-        <!-- SHARED BACKGROUND: Video + Canvas Stars -->
-        <div class="shared-bg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;">
-            <!-- 1. Pulsating Video -->
-            <video autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: cover; opacity: 0.6;">
-                <source src="Video_Generation_Pulsating_Nodes_Animation.mp4" type="video/mp4">
-            </video>
-            <!-- 2. Dark Overlay -->
-            <div
-                style="position: absolute; top:0; left:0; width:100%; height:100%; background: linear-gradient(to bottom, rgba(0,0,0,0.9), rgba(0,0,0,0.6));">
+        <!-- HERO -->
+        <section class="hero" id="home">
+            <div class="eyebrow reveal in">PH.D. CANDIDATE · ACTUARIAL SCIENCE · UNIVERSITY OF WATERLOO</div>
+            <h1 class="reveal in" style="--d:.08s">Vivian (Jingcheng) Yu</h1>
+            <div class="typeline reveal in" style="--d:.16s">
+                <span>Research in</span>
+                <span class="typed" id="typed">Submodular Risk Measures</span>
+                <span class="caret" aria-hidden="true"></span>
             </div>
-            <!-- 3. Star Canvas -->
-            <canvas id="star-canvas"
-                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; mix-blend-mode: screen;"></canvas>
-        </div>
+            <div class="hero-cta reveal in" style="--d:.24s">
+                <a class="btn btn-gold" href="#research">EXPLORE RESEARCH</a>
+                <a class="btn btn-ghost" href="Vivian_Yu_CV.pdf" target="_blank" rel="noopener">DOWNLOAD CV</a>
+            </div>
+            <div class="badge-row reveal in" style="--d:.32s">
+                <span class="badge">FSA</span>
+                <span class="badge">CERA</span>
+                <span class="badge">CFA LEVEL II CANDIDATE</span>
+            </div>
+            <div class="scroll-hint" aria-hidden="true">SCROLL<span class="chev"></span></div>
+        </section>
 
-        <!-- CONTENT (Scrolls over the fixed/absolute bg) -->
-        <div class="content-inner" style="z-index: 2; width: 100%; padding-bottom: 60px; flex: 1;">
-
-            <!-- GLASS PROFILE CARD -->
-            <div style="
-                    display: flex; 
-                    align-items: center; 
-                    justify-content: space-between; 
-                    gap: 40px; 
-                    margin-bottom: 50px; 
-                    background: rgba(255, 255, 255, 0.03); 
-                    border: 1px solid rgba(212, 175, 55, 0.2); 
-                    padding: 40px; 
-                    border-radius: 15px; 
-                    backdrop-filter: blur(5px);
-                    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-                 ">
-                <!-- Text Side -->
-                <div style="flex: 1; min-width: 0;">
-                    <h1 style="margin-top: 0; margin-bottom: 10px; font-size: 3.2rem; line-height: 1.1; color: #fff;">
-                        Vivian (Jingcheng) Yu</h1>
-                    <p class="subtitle" style="margin-bottom: 0; font-size: 1.1rem; color: var(--gold-light);">Ph.D.
-                        Researcher | Submodular Risk Measures & Financial Stability</p>
-                </div>
-
-                <!-- Photo Side -->
-                <div style="flex-shrink: 0;">
-                    <!-- FENG SHUI ADJUSTMENT: "Shining Pearl" (Ming Zhu Chu Hai) -->
-                    <!-- 1. No Border (No "Cage/Prison" - 囚) -->
-                    <!-- 2. Radiant Glow (Metal/Gold/White Energy Radiating Outward) -->
-                    <!-- 3. Round Shape (Metal Element - Jin) -->
-                    <!-- 4. Background adjusted to warmer tone: #B0AAA0 (Per user request) -->
-                    <img src="Photo.jpg" alt="Vivian Yu"
-                        style="width: 140px; height: 140px; border-radius: 50%; background-color: #B0AAA0; object-fit: contain; display: block; box-shadow: 0 0 20px rgba(255, 255, 255, 0.6), 0 0 50px rgba(212, 175, 55, 0.4);">
-                </div>
+        <!-- ABOUT -->
+        <section id="about">
+            <div class="sec-head reveal">
+                <div class="kicker">01 — PROFILE</div>
+                <h2 class="sec-title">About Me</h2>
             </div>
 
-            <!-- PROFILE -->
-            <div id="about" style="margin-bottom: 80px;">
-                <h2
-                    style="color: var(--gold); font-family: 'Playfair Display'; font-size: 2.5rem; margin-bottom: 30px;">
-                    Profile</h2>
-                <p style="max-width: 800px; color: #ccc; line-height: 1.8; margin-bottom: 40px; font-size: 1.1rem;">
+            <div class="glass about-grid reveal" style="--d:.1s">
+                <div class="photo-wrap">
+                    <div class="ring" aria-hidden="true"></div>
+                    <img src="Photo.jpg" alt="Portrait of Vivian Yu" loading="lazy">
+                </div>
+                <p class="bio">
                     I am a Ph.D. Candidate in Actuarial Science at the <strong>University of Waterloo</strong>,
                     specializing in the intersection of financial stability, risk management, and theoretical
                     mathematics. My research focuses on <strong>quantitative risk management and stochastic
-                        optimization</strong>,
-                    developing robust frameworks that bridge abstract mathematical theory with data-driven market
-                    applications.
+                        optimization</strong>, developing robust frameworks that bridge abstract mathematical theory
+                    with data-driven market applications.
                     <br><br>
                     With a Master of Financial Engineering from <strong>UCLA</strong> and professional experience at
-                    <strong>Ernst & Young</strong> and the <strong>California Department of Insurance</strong>, I
+                    <strong>Ernst &amp; Young</strong> and the <strong>California Department of Insurance</strong>, I
                     combine rigorous academic discipline with industry-grade problem solving.
                 </p>
+            </div>
 
-                <!-- Education & Certs Grid -->
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 50px;">
-                    <div>
-                        <h3
-                            style="color: #fff; border-bottom: 1px solid var(--gold); padding-bottom: 10px; margin-bottom: 20px;">
-                            Education</h3>
-                        <div style="margin-bottom: 20px;">
-                            <h4 style="color: var(--gold-light); font-size: 1.1rem;">University of Waterloo</h4>
-                            <p style="color: #aaa; font-size: 0.9rem;">Ph.D. in Actuarial Science | 2024 - Present
-                            </p>
+            <div class="duo">
+                <div class="reveal" style="--d:.15s">
+                    <h3>Education</h3>
+                    <div class="tl">
+                        <div class="tl-item">
+                            <h4>University of Waterloo</h4>
+                            <p class="meta">Ph.D. in Actuarial Science | 2024 – Present</p>
                         </div>
-                        <div>
-                            <h4 style="color: var(--gold-light); font-size: 1.1rem;">UCLA</h4>
-                            <p style="color: #aaa; font-size: 0.9rem;">Master of Financial Engineering | 2022</p>
-                            <p style="color: #666; font-size: 0.8rem;">GPA 3.82/4.0</p>
+                        <div class="tl-item">
+                            <h4>UCLA</h4>
+                            <p class="meta">Master of Financial Engineering | 2022</p>
+                            <p class="sub">GPA 3.82 / 4.0</p>
                         </div>
-                        <div>
-                            <h4 style="color: var(--gold-light); font-size: 1.1rem;">University of Manitoba</h4>
-                            <p style="color: #aaa; font-size: 0.9rem;">B.S. Actuarial Math | 2019</p>
-                            <p style="color: #666; font-size: 0.8rem;">First Class Honor</p>
-                        </div>
-                    </div>
-                    <div>
-                        <h3
-                            style="color: #fff; border-bottom: 1px solid var(--gold); padding-bottom: 10px; margin-bottom: 20px;">
-                            Credentials</h3>
-                        <ul style="list-style: none; padding: 0; color: #ccc; line-height: 2;">
-                            <li><span style="color: var(--gold);">★</span> FSA (Fellow of Society of Actuaries)</li>
-                            <li><span style="color: var(--gold);">★</span> CERA (Chartered Enterprise Risk Analyst)
-                            </li>
-                            <li><span style="color: var(--gold);">★</span> CFA Level II Candidate</li>
-                        </ul>
-                        <h3
-                            style="color: #fff; border-bottom: 1px solid var(--gold); padding-bottom: 10px; margin-bottom: 20px; margin-top: 30px;">
-                            Technical Skills</h3>
-                        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-                            <span
-                                style="border: 1px solid #444; padding: 5px 10px; font-size: 0.8rem; border-radius: 4px;">Python</span>
-                            <span
-                                style="border: 1px solid #444; padding: 5px 10px; font-size: 0.8rem; border-radius: 4px;">R
-                                (Tidyverse)</span>
-                            <span
-                                style="border: 1px solid #444; padding: 5px 10px; font-size: 0.8rem; border-radius: 4px;">SQL</span>
-                            <span
-                                style="border: 1px solid #444; padding: 5px 10px; font-size: 0.8rem; border-radius: 4px;">TensorFlow</span>
-                            <span
-                                style="border: 1px solid #444; padding: 5px 10px; font-size: 0.8rem; border-radius: 4px;">Stochastic
-                                Calculus</span>
+                        <div class="tl-item">
+                            <h4>University of Manitoba</h4>
+                            <p class="meta">B.S. Actuarial Mathematics | 2019</p>
+                            <p class="sub">First Class Honor</p>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <!-- EXPERIENCE -->
-            <div id="experience" style="margin-bottom: 100px;">
-                <h2
-                    style="color: var(--gold); font-family: 'Playfair Display'; font-size: 2.5rem; margin-bottom: 30px;">
-                    Professional Experience</h2>
-                <div class="project-card" style="margin-bottom: 20px;">
-                    <h3 style="font-size: 1.3rem;">Ernst & Young (EY)</h3>
-                    <p style="color: var(--gold); font-size: 0.8rem; margin-bottom: 10px;">ACTUARIAL CONSULTANT |
-                        NEW
-                        YORK | 2023</p>
-                    <p style="font-size: 0.95rem;">Applied algorithmic optimization techniques (Simulated Annealing,
-                        Genetic Algorithms) to optimize portfolios with liabilities, successfully reducing financing
-                        costs by 50%.</p>
-                </div>
-
-                <div class="project-card" style="margin-bottom: 20px;">
-                    <h3 style="font-size: 1.3rem;">California Department of Insurance</h3>
-                    <p style="color: var(--gold); font-size: 0.8rem; margin-bottom: 10px;">ACTUARIAL STUDENT
-                        ASSISTANT |
-                        LOS ANGELES | 2022</p>
-                    <p style="font-size: 0.95rem;">Conducted in-depth research on ISO filings and redeveloped the
-                        Class
-                        Plan Application using VBA, achieving a 30% reduction in processing time.</p>
-                </div>
-            </div>
-
-            <!-- RESEARCH (Now Continuous) -->
-            <div id="research">
-                <h2
-                    style="color: var(--gold); font-family: 'Playfair Display'; font-size: 2.5rem; margin-bottom: 40px;">
-                    Research Projects</h2>
-
-                <div class="projects-grid">
-                    <div class="project-card">
-                        <h3>Submodular Risk Measures</h3>
-                        <p
-                            style="color: var(--gold); margin-bottom: 15px; font-size: 0.8rem; text-transform: uppercase;">
-                            Working Paper</p>
-                        <p>Developed a theoretical framework to study submodularity for cash-invariant and convex
-                            law-invariant risk measures. Clarified structural links to Choquet-type representations.
-                        </p>
-                    </div>
-                    <div class="project-card">
-                        <h3>ES-only E-backtesting for AR-GARCH Losses</h3>
-                        <p
-                            style="color: var(--gold); margin-bottom: 15px; font-size: 0.8rem; text-transform: uppercase;">
-                            Working Paper</p>
-                        <p>Developed sequential e-backtests for Expected Shortfall when only the ES forecast is
-                            reported, treating the associated VaR as unobserved. Established e-process validity via
-                            infima over admissible values and certified threshold tests for AR-GARCH losses. Joint
-                            work with Ruodu Wang.</p>
-                    </div>
-                    <div class="project-card">
-                        <h3>Mathematics of Scenario-based Risk Evaluation</h3>
-                        <p
-                            style="color: var(--gold); margin-bottom: 15px; font-size: 0.8rem; text-transform: uppercase;">
-                            Work in Progress</p>
-                        <p>Studies risk measures determined by collections of scenarios (probability measures),
-                            including scenario-based distortion and spectral risk measures and their structural
-                            properties. Joint work with Ruodu Wang and Chenxi Xia.</p>
-                    </div>
-                    <div class="project-card">
-                        <h3>Portfolio Design</h3>
-                        <p
-                            style="color: var(--gold); margin-bottom: 15px; font-size: 0.8rem; text-transform: uppercase;">
-                            UCLA Capstone</p>
-                        <p>Engineered a portfolio analysis framework using Classification and Decision Tree (CART)
-                            models
-                            across 14 asset classes. Identified critical shifts in feature importance.</p>
+                <div class="reveal" style="--d:.25s">
+                    <h3>Credentials</h3>
+                    <ul class="star-list">
+                        <li><span class="st">★</span>FSA (Fellow of the Society of Actuaries)</li>
+                        <li><span class="st">★</span>CERA (Chartered Enterprise Risk Analyst)</li>
+                        <li><span class="st">★</span>CFA Level II Candidate</li>
+                    </ul>
+                    <h3 style="margin-top: 34px;">Technical Skills</h3>
+                    <div class="chips">
+                        <span class="chip">Python</span>
+                        <span class="chip">R (Tidyverse)</span>
+                        <span class="chip">SQL</span>
+                        <span class="chip">TensorFlow</span>
+                        <span class="chip">Stochastic Calculus</span>
                     </div>
                 </div>
             </div>
+        </section>
 
-        </div> <!-- End content-inner -->
-
-
-        <!-- Footer: Full Width, Bottom -->
-        <footer
-            style="width: 100%; border-top: 1px solid rgba(255,255,255,0.1); padding: 40px 0; text-align: center; color: #666; font-size: 0.8rem; background-color: #000; position: relative; z-index: 100; margin-top: auto;">
-            <p>&copy; 2025 Vivian (Jingcheng) Yu. All rights reserved.</p>
-            <div style="margin-top: 15px;">
-                <a href="#"
-                    style="color: #666; text-decoration: none; border-bottom: 1px dotted #444; padding-bottom: 2px; transition: color 0.3s;"
-                    onmouseover="this.style.color='#d4af37'" onmouseout="this.style.color='#666'">Back to Top</a>
+        <!-- EXPERIENCE -->
+        <section id="experience">
+            <div class="sec-head reveal">
+                <div class="kicker">02 — CAREER</div>
+                <h2 class="sec-title">Professional Experience</h2>
             </div>
-        </footer>
-    </div>
+            <div class="exp-stack">
+                <div class="card reveal" style="--d:.05s">
+                    <span class="corner"></span>
+                    <span class="tag">2024 – PRESENT | WATERLOO, ON</span>
+                    <h3>University of Waterloo — Teaching Assistant</h3>
+                    <p class="desc">Lead tutorials for undergraduate actuarial students, translating complex
+                        mathematical and risk-management theory into accessible, engaging concepts, with personalized
+                        mentorship during office hours.</p>
+                </div>
+                <div class="card reveal" style="--d:.12s">
+                    <span class="corner"></span>
+                    <span class="tag">2023 | NEW YORK</span>
+                    <h3>Ernst &amp; Young — Actuarial Consultant</h3>
+                    <p class="desc">Applied algorithmic optimization techniques (Simulated Annealing, Genetic
+                        Algorithms) to optimize portfolios with liabilities, successfully reducing financing costs by
+                        50%.</p>
+                </div>
+                <div class="card reveal" style="--d:.19s">
+                    <span class="corner"></span>
+                    <span class="tag">2022 | LOS ANGELES</span>
+                    <h3>California Department of Insurance — Actuarial Student Assistant</h3>
+                    <p class="desc">Conducted in-depth research on ISO filings and redeveloped the Class Plan
+                        Application using VBA, achieving a 30% reduction in processing time.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- RESEARCH -->
+        <section id="research">
+            <div class="sec-head reveal">
+                <div class="kicker">03 — RESEARCH</div>
+                <h2 class="sec-title">Research Projects</h2>
+            </div>
+            <div class="projects-grid">
+                <div class="card reveal" style="--d:.05s">
+                    <span class="corner"></span>
+                    <span class="tag">WORKING PAPER</span>
+                    <h3>Submodular Risk Measures</h3>
+                    <p class="desc">Developed a theoretical framework to study submodularity for cash-invariant and
+                        convex law-invariant risk measures. Clarified structural links to Choquet-type
+                        representations.</p>
+                </div>
+                <div class="card reveal" style="--d:.12s">
+                    <span class="corner"></span>
+                    <span class="tag">WORKING PAPER</span>
+                    <h3>ES-only E-backtesting for AR-GARCH Losses</h3>
+                    <p class="desc">Developed sequential e-backtests for Expected Shortfall when only the ES forecast
+                        is reported, treating the associated VaR as unobserved. Established e-process validity via
+                        infima over admissible values and certified threshold tests for AR-GARCH losses.</p>
+                    <p class="co">Joint work with Ruodu Wang</p>
+                </div>
+                <div class="card reveal" style="--d:.19s">
+                    <span class="corner"></span>
+                    <span class="tag">WORK IN PROGRESS</span>
+                    <h3>Mathematics of Scenario-based Risk Evaluation</h3>
+                    <p class="desc">Studies risk measures determined by collections of scenarios (probability
+                        measures), including scenario-based distortion and spectral risk measures and their structural
+                        properties.</p>
+                    <p class="co">Joint work with Ruodu Wang and Chenxi Xia</p>
+                </div>
+                <div class="card reveal" style="--d:.26s">
+                    <span class="corner"></span>
+                    <span class="tag">UCLA CAPSTONE</span>
+                    <h3>Portfolio Design with CART Models</h3>
+                    <p class="desc">Engineered a portfolio analysis framework using Classification and Decision Tree
+                        (CART) models across 14 asset classes and 73 macroeconomic variables. Identified critical
+                        shifts in feature importance across rolling windows.</p>
+                </div>
+                <div class="card reveal" style="--d:.33s">
+                    <span class="corner"></span>
+                    <span class="tag">IAQF COMPETITION 2022</span>
+                    <h3>Triggered Shorting Strategy on VIX</h3>
+                    <p class="desc">Led a team calibrating a 7-state Hidden Markov Model and K-means clustering to
+                        identify market regimes, feeding neural-network predictions that powered a short strategy with
+                        an average return of 173.5%.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT -->
+        <section id="contact">
+            <div class="glass contact-box reveal">
+                <div class="kicker">04 — CONTACT</div>
+                <h2>Let's <em>connect</em>.</h2>
+                <p>Open to research collaboration and conversations on risk, mathematics, and markets.</p>
+                <div class="contact-actions">
+                    <a class="btn btn-gold" href="mailto:j563yu@uwaterloo.ca" id="email-btn">
+                        J563YU@UWATERLOO.CA</a>
+                    <button class="btn btn-ghost" id="copy-email" type="button">COPY EMAIL</button>
+                    <a class="btn btn-ghost" href="https://github.com/jingchengyuactuarial" target="_blank"
+                        rel="noopener">GITHUB</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Vivian (Jingcheng) Yu. All rights reserved.</p>
+        <div style="margin-top: 14px;"><a href="#top">Back to Top</a></div>
+    </footer>
+
+    <div id="toast" role="status">EMAIL COPIED ✦</div>
 
     <script>
-        // --- 1. LOADER & VIDEO INIT ---
-        const video = document.getElementById('hero-video');
-        const loader = document.getElementById('loader');
-        const scrollHint = document.getElementById('scroll-hint');
-        const track = document.getElementById('video-track');
-        const mainContent = document.getElementById('main-content');
+        (() => {
+            'use strict';
+            const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const isTouch = window.matchMedia('(hover: none)').matches;
 
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                loader.style.opacity = '0';
-                setTimeout(() => loader.style.display = 'none', 1000);
-            }, 800);
-            if (video) video.currentTime = 0;
-        });
+            /* ---------- Loader ---------- */
+            const loader = document.getElementById('loader');
+            window.addEventListener('load', () => {
+                setTimeout(() => loader.classList.add('done'), 500);
+            });
+            setTimeout(() => loader.classList.add('done'), 2500); // safety net
 
-        // --- 2. STICKY SCROLL logic ---
-        window.addEventListener('scroll', () => {
-            const trackRect = track.getBoundingClientRect();
-            const trackHeight = track.offsetHeight;
-            const windowHeight = window.innerHeight;
+            /* ---------- Golden constellation canvas ---------- */
+            const canvas = document.getElementById('net-canvas');
+            const ctx = canvas.getContext('2d');
+            const DPR = Math.min(window.devicePixelRatio || 1, 1.75);
+            let W = 0, H = 0, nodes = [], comets = [];
+            const mouse = { x: -9e3, y: -9e3 };
 
-            // distance scrolled *into* the track
-            // When track.top is 0, we are at start.
-            // When track.bottom is windowHeight, we are at end.
+            function sizeCanvas() {
+                W = canvas.width = Math.floor(innerWidth * DPR);
+                H = canvas.height = Math.floor(innerHeight * DPR);
+                canvas.style.width = innerWidth + 'px';
+                canvas.style.height = innerHeight + 'px';
+                seedNodes();
+            }
 
-            // Amount of track that has passed the top of viewport:
-            const scrolled = -trackRect.top;
-            const scrollableDist = trackHeight - windowHeight;
+            function seedNodes() {
+                const target = Math.min(130, Math.floor(innerWidth * innerHeight / 14000));
+                nodes = Array.from({ length: target }, () => ({
+                    x: Math.random() * W,
+                    y: Math.random() * H,
+                    vx: (Math.random() - .5) * .16 * DPR,
+                    vy: (Math.random() - .5) * .16 * DPR,
+                    r: (Math.random() * 1.5 + .7) * DPR,
+                    ph: Math.random() * Math.PI * 2,
+                    sp: Math.random() * .015 + .006,
+                    warm: Math.random() < .55
+                }));
+            }
 
-            if (scrolled > 50) {
-                if (scrollHint) scrollHint.style.opacity = '0';
+            function spawnComet() {
+                const fromLeft = Math.random() < .5;
+                comets.push({
+                    x: fromLeft ? -40 * DPR : W + 40 * DPR,
+                    y: Math.random() * H * .5,
+                    vx: (fromLeft ? 1 : -1) * (5 + Math.random() * 4) * DPR,
+                    vy: (1.2 + Math.random() * 1.4) * DPR,
+                    life: 1
+                });
+            }
+
+            const LINK = 135 * DPR, MOUSE_LINK = 190 * DPR;
+
+            function drawFrame() {
+                ctx.clearRect(0, 0, W, H);
+
+                // links
+                ctx.lineWidth = .6 * DPR;
+                for (let i = 0; i < nodes.length; i++) {
+                    const a = nodes[i];
+                    for (let j = i + 1; j < nodes.length; j++) {
+                        const b = nodes[j];
+                        const dx = a.x - b.x, dy = a.y - b.y;
+                        const d2 = dx * dx + dy * dy;
+                        if (d2 < LINK * LINK) {
+                            const alpha = (1 - Math.sqrt(d2) / LINK) * .34;
+                            ctx.strokeStyle = `rgba(212,175,55,${alpha})`;
+                            ctx.beginPath();
+                            ctx.moveTo(a.x, a.y);
+                            ctx.lineTo(b.x, b.y);
+                            ctx.stroke();
+                        }
+                    }
+                    // link to cursor
+                    const mdx = a.x - mouse.x, mdy = a.y - mouse.y;
+                    const md2 = mdx * mdx + mdy * mdy;
+                    if (md2 < MOUSE_LINK * MOUSE_LINK) {
+                        const alpha = (1 - Math.sqrt(md2) / MOUSE_LINK) * .5;
+                        ctx.strokeStyle = `rgba(250,221,118,${alpha})`;
+                        ctx.beginPath();
+                        ctx.moveTo(a.x, a.y);
+                        ctx.lineTo(mouse.x, mouse.y);
+                        ctx.stroke();
+                    }
+                }
+
+                // nodes
+                for (const n of nodes) {
+                    n.ph += n.sp;
+                    const pulse = (Math.sin(n.ph) + 1) / 2;
+                    const r = n.r * (0.75 + pulse * 0.65);
+                    ctx.beginPath();
+                    ctx.fillStyle = n.warm
+                        ? `rgba(212,175,55,${0.35 + pulse * 0.5})`
+                        : `rgba(255,255,255,${0.25 + pulse * 0.45})`;
+                    ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // drift + gentle attraction to cursor
+                    const mdx = mouse.x - n.x, mdy = mouse.y - n.y;
+                    const md2 = mdx * mdx + mdy * mdy;
+                    if (md2 < MOUSE_LINK * MOUSE_LINK && md2 > 1) {
+                        const f = 0.012 / Math.sqrt(md2);
+                        n.vx += mdx * f;
+                        n.vy += mdy * f;
+                    }
+                    const vmax = .4 * DPR;
+                    n.vx = Math.max(-vmax, Math.min(vmax, n.vx)) * .995;
+                    n.vy = Math.max(-vmax, Math.min(vmax, n.vy)) * .995;
+                    n.x += n.vx;
+                    n.y += n.vy;
+                    if (n.x < -20) n.x = W + 20;
+                    if (n.x > W + 20) n.x = -20;
+                    if (n.y < -20) n.y = H + 20;
+                    if (n.y > H + 20) n.y = -20;
+                }
+
+                // comets
+                for (let i = comets.length - 1; i >= 0; i--) {
+                    const c = comets[i];
+                    c.x += c.vx;
+                    c.y += c.vy;
+                    c.life -= .008;
+                    if (c.life <= 0 || c.x < -80 || c.x > W + 80 || c.y > H + 80) {
+                        comets.splice(i, 1);
+                        continue;
+                    }
+                    const tail = 26;
+                    const grad = ctx.createLinearGradient(c.x, c.y, c.x - c.vx * tail, c.y - c.vy * tail);
+                    grad.addColorStop(0, `rgba(250,221,118,${0.85 * c.life})`);
+                    grad.addColorStop(1, 'rgba(250,221,118,0)');
+                    ctx.strokeStyle = grad;
+                    ctx.lineWidth = 1.4 * DPR;
+                    ctx.beginPath();
+                    ctx.moveTo(c.x, c.y);
+                    ctx.lineTo(c.x - c.vx * tail, c.y - c.vy * tail);
+                    ctx.stroke();
+                }
+            }
+
+            let rafId = null;
+            function loop() {
+                drawFrame();
+                rafId = requestAnimationFrame(loop);
+            }
+
+            sizeCanvas();
+            addEventListener('resize', sizeCanvas, { passive: true });
+
+            if (!reduceMotion) {
+                loop();
+                setInterval(() => { if (!document.hidden && Math.random() < .75) spawnComet(); }, 4200);
+                document.addEventListener('visibilitychange', () => {
+                    if (document.hidden) {
+                        cancelAnimationFrame(rafId);
+                        rafId = null;
+                    } else if (!rafId) loop();
+                });
             } else {
-                if (scrollHint) scrollHint.style.opacity = '1';
+                drawFrame(); // static constellation
             }
 
-            if (video && video.duration) {
-                let rawProgress = scrolled / scrollableDist;
+            addEventListener('pointermove', e => {
+                mouse.x = e.clientX * DPR;
+                mouse.y = e.clientY * DPR;
+            }, { passive: true });
+            addEventListener('pointerleave', () => { mouse.x = -9e3; mouse.y = -9e3; }, { passive: true });
 
-                // Clamp
-                // --- 1:1 LINEAR MAPPING ---
-                // User wants: "Scroll down -> Video plays -> Reach 2nd screen -> Video just finishes"
-                // This means Progress MUST match Scroll exactly (1.0 = 1.0).
+            /* ---------- Cursor glow ---------- */
+            const glow = document.getElementById('cursor-glow');
+            if (!isTouch && !reduceMotion) {
+                let gx = innerWidth / 2, gy = innerHeight / 2, tx = gx, ty = gy;
+                addEventListener('pointermove', e => { tx = e.clientX; ty = e.clientY; }, { passive: true });
+                (function glideGlow() {
+                    gx += (tx - gx) * .12;
+                    gy += (ty - gy) * .12;
+                    glow.style.left = gx + 'px';
+                    glow.style.top = gy + 'px';
+                    requestAnimationFrame(glideGlow);
+                })();
+            } else {
+                glow.style.display = 'none';
+            }
 
-                if (video.readyState >= 1 && Number.isFinite(video.duration) && video.duration > 0) {
-                    video.pause();
-                    video.currentTime = video.duration * rawProgress;
+            /* ---------- Scroll: progress bar + top bar ---------- */
+            const progress = document.getElementById('progress');
+            const topBar = document.getElementById('top-bar');
+            let ticking = false;
+            function onScroll() {
+                if (ticking) return;
+                ticking = true;
+                requestAnimationFrame(() => {
+                    const max = document.documentElement.scrollHeight - innerHeight;
+                    progress.style.width = (max > 0 ? (scrollY / max) * 100 : 0) + '%';
+                    topBar.classList.toggle('scrolled', scrollY > 40);
+                    ticking = false;
+                });
+            }
+            addEventListener('scroll', onScroll, { passive: true });
+            onScroll();
+
+            /* ---------- Reveal on scroll ---------- */
+            const io = new IntersectionObserver(entries => {
+                for (const en of entries) {
+                    if (en.isIntersecting) {
+                        en.target.classList.add('in');
+                        io.unobserve(en.target);
+                    }
                 }
+            }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+            document.querySelectorAll('.reveal:not(.in)').forEach(el => io.observe(el));
 
-
-                // --- 3. PARALLAX LIFT (Seamless Transition) ---
-                // As the video nears completion (or user scrolls past), pull the content up safely.
-                // Since track is shorter now (150vh), 'scrolled' reaches end faster.
-                // Let's just use standard flow: The main content naturally follows the track.
-                // But to make it "cover" the video at the end, we can add a small negative margin or transform?
-                // Actually, simply reducing the track height (done in CSS) solves 90% of this.
-                // But let's add a small 'swish' to ensure it's distinct.
-
-                if (mainContent) {
-                    // No aggressive lift needed if track height is correct. 
-                    // Just let it scroll naturally into view.
-                    mainContent.style.transform = `translateY(0)`;
+            /* ---------- Active nav link ---------- */
+            const navLinks = new Map(
+                [...document.querySelectorAll('.top-nav a[data-nav]')].map(a => [a.dataset.nav, a])
+            );
+            const secIO = new IntersectionObserver(entries => {
+                for (const en of entries) {
+                    if (en.isIntersecting) {
+                        navLinks.forEach(a => a.classList.remove('active'));
+                        const link = navLinks.get(en.target.id);
+                        if (link) link.classList.add('active');
+                    }
                 }
+            }, { rootMargin: '-45% 0px -50% 0px' });
+            ['about', 'experience', 'research', 'contact'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) secIO.observe(el);
+            });
+
+            /* ---------- Typewriter ---------- */
+            const phrases = [
+                'Submodular Risk Measures',
+                'ES-only E-backtesting',
+                'Scenario-based Risk Evaluation',
+                'Financial Stability'
+            ];
+            const typedEl = document.getElementById('typed');
+            if (!reduceMotion) {
+                let pi = 0, ci = phrases[0].length, deleting = true;
+                setTimeout(function tick() {
+                    const word = phrases[pi];
+                    ci += deleting ? -1 : 1;
+                    typedEl.textContent = word.slice(0, ci);
+                    let delay = deleting ? 32 : 62;
+                    if (!deleting && ci === word.length) {
+                        delay = 2300;
+                        deleting = true;
+                    } else if (deleting && ci === 0) {
+                        pi = (pi + 1) % phrases.length;
+                        deleting = false;
+                        delay = 350;
+                    }
+                    setTimeout(tick, delay);
+                }, 2600);
             }
-        });
 
-
-        // --- 3. STAR ANIMATION ---
-        const canvas = document.getElementById('star-canvas');
-        const ctx = canvas.getContext('2d');
-        let width, height;
-        let stars = [];
-
-        function resize() {
-            // Target the unified Shared Background container
-            const parent = document.querySelector('.shared-bg');
-            if (parent) {
-                width = canvas.width = parent.offsetWidth;
-                height = canvas.height = parent.offsetHeight;
-                initStars();
+            /* ---------- Card tilt + spotlight ---------- */
+            if (!isTouch && !reduceMotion) {
+                document.querySelectorAll('.card').forEach(card => {
+                    let raf = null;
+                    card.addEventListener('pointermove', e => {
+                        if (raf) return;
+                        raf = requestAnimationFrame(() => {
+                            const r = card.getBoundingClientRect();
+                            const px = (e.clientX - r.left) / r.width;
+                            const py = (e.clientY - r.top) / r.height;
+                            card.style.setProperty('--mx', (px * 100) + '%');
+                            card.style.setProperty('--my', (py * 100) + '%');
+                            card.style.setProperty('--ry', ((px - .5) * 7) + 'deg');
+                            card.style.setProperty('--rx', ((.5 - py) * 7) + 'deg');
+                            card.style.setProperty('--lift', '-5px');
+                            raf = null;
+                        });
+                    });
+                    card.addEventListener('pointerleave', () => {
+                        card.style.setProperty('--rx', '0deg');
+                        card.style.setProperty('--ry', '0deg');
+                        card.style.setProperty('--lift', '0');
+                    });
+                });
             }
-        }
-        window.addEventListener('resize', resize);
 
-        class Star {
-            constructor() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.size = Math.random() * 2 + 1;
-                this.gleam = Math.random() * Math.PI;
-                this.speed = Math.random() * 0.05 + 0.01;
+            /* ---------- Copy email ---------- */
+            const toast = document.getElementById('toast');
+            const copyBtn = document.getElementById('copy-email');
+            if (copyBtn) {
+                copyBtn.addEventListener('click', async () => {
+                    try {
+                        await navigator.clipboard.writeText('j563yu@uwaterloo.ca');
+                        toast.classList.add('show');
+                        setTimeout(() => toast.classList.remove('show'), 1800);
+                    } catch (err) {
+                        location.href = 'mailto:j563yu@uwaterloo.ca';
+                    }
+                });
             }
-            draw() {
-                this.gleam += this.speed;
-                const opacity = (Math.sin(this.gleam) + 1) / 2;
-
-                ctx.beginPath();
-                ctx.shadowBlur = 5;
-                ctx.shadowColor = "rgba(212, 175, 55, 0.8)";
-                ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
-                ctx.arc(this.x, this.y, this.size * 0.5, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.shadowBlur = 0;
-            }
-        }
-
-        function initStars() {
-            stars = [];
-            const count = 100;
-            for (let i = 0; i < count; i++) stars.push(new Star());
-        }
-
-        function animate() {
-            ctx.clearRect(0, 0, width, height);
-            stars.forEach(s => s.draw());
-            requestAnimationFrame(animate);
-        }
-
-        // Init
-        setTimeout(() => {
-            resize();
-            animate();
-        }, 1000);
-
+        })();
     </script>
 </body>
 
