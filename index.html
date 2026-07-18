@@ -19,6 +19,9 @@
             --gold: #d4af37;
             --gold-light: #fadd76;
             --gold-dim: rgba(212, 175, 55, 0.35);
+            --aqua: #57c8e0;
+            --aqua-deep: #1d7f9c;
+            --aqua-dim: rgba(87, 200, 224, 0.3);
             --bg: #050505;
             --ink: #e8e6e1;
             --muted: #a9a49a;
@@ -97,7 +100,7 @@
             height: 45vmax;
             bottom: -18vmax;
             left: -12vmax;
-            background: radial-gradient(circle, rgba(120, 90, 20, 0.09), transparent 60%);
+            background: radial-gradient(circle, rgba(29, 127, 156, 0.10), transparent 60%);
             animation: drift-b 32s ease-in-out infinite alternate;
         }
 
@@ -121,6 +124,48 @@
             background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.55) 100%);
         }
 
+        /* ---------- Water (金生水) ---------- */
+        .water {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .wave {
+            position: absolute;
+            bottom: -12px;
+            left: 0;
+            width: 200%;
+            height: 150px;
+            animation: waveslide 16s linear infinite;
+            will-change: transform;
+        }
+
+        .wave.w2 {
+            height: 110px;
+            bottom: -26px;
+            animation-duration: 10s;
+            animation-direction: reverse;
+            opacity: .7;
+        }
+
+        .wave.w3 {
+            height: 130px;
+            bottom: -4px;
+            animation-duration: 22s;
+        }
+
+        @keyframes waveslide {
+            to {
+                transform: translateX(-50%);
+            }
+        }
+
         /* ---------- Cursor glow (desktop) ---------- */
         #cursor-glow {
             position: fixed;
@@ -141,7 +186,7 @@
             left: 0;
             height: 2px;
             width: 0;
-            background: linear-gradient(90deg, var(--gold), var(--gold-light));
+            background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--aqua));
             box-shadow: 0 0 12px var(--gold-dim);
             z-index: 1200;
         }
@@ -592,6 +637,24 @@
             font-style: italic;
         }
 
+        .card .paper-link {
+            display: inline-block;
+            margin-top: 18px;
+            font-size: .72rem;
+            letter-spacing: 2.5px;
+            font-weight: 600;
+            color: var(--gold-light);
+            text-decoration: none;
+            border-bottom: 1px solid var(--gold-dim);
+            padding-bottom: 3px;
+            transition: color .3s, border-color .3s;
+        }
+
+        .card .paper-link:hover {
+            color: var(--aqua);
+            border-color: var(--aqua-dim);
+        }
+
         /* ---------- About ---------- */
         .about-grid {
             display: grid;
@@ -957,6 +1020,24 @@
     <canvas id="net-canvas" aria-hidden="true"></canvas>
     <div class="nebula nebula-a" aria-hidden="true"></div>
     <div class="nebula nebula-b" aria-hidden="true"></div>
+    <div class="water" aria-hidden="true">
+        <svg class="wave w3" viewBox="0 0 1600 200" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill="rgba(29,127,156,0.10)"
+                d="M0,120 C100,90 200,90 400,120 C600,150 700,150 800,120 C900,90 1000,90 1200,120 C1400,150 1500,150 1600,120 L1600,200 L0,200 Z" />
+        </svg>
+        <svg class="wave w1" viewBox="0 0 1600 200" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill="rgba(87,200,224,0.10)"
+                d="M0,130 C150,100 250,100 400,130 C550,160 650,160 800,130 C950,100 1050,100 1200,130 C1350,160 1450,160 1600,130 L1600,200 L0,200 Z" />
+            <path fill="none" stroke="rgba(250,221,118,0.35)" stroke-width="1.4"
+                d="M0,130 C150,100 250,100 400,130 C550,160 650,160 800,130 C950,100 1050,100 1200,130 C1350,160 1450,160 1600,130" />
+        </svg>
+        <svg class="wave w2" viewBox="0 0 1600 200" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill="rgba(87,200,224,0.07)"
+                d="M0,140 C120,115 280,115 400,140 C520,165 680,165 800,140 C920,115 1080,115 1200,140 C1320,165 1480,165 1600,140 L1600,200 L0,200 Z" />
+            <path fill="none" stroke="rgba(212,175,55,0.22)" stroke-width="1"
+                d="M0,140 C120,115 280,115 400,140 C520,165 680,165 800,140 C920,115 1080,115 1200,140 C1320,165 1480,165 1600,140" />
+        </svg>
+    </div>
     <div class="vignette" aria-hidden="true"></div>
     <div id="cursor-glow" aria-hidden="true"></div>
     <div id="progress" aria-hidden="true"></div>
@@ -1105,11 +1186,16 @@
             <div class="projects-grid">
                 <div class="card reveal" style="--d:.05s">
                     <span class="corner"></span>
-                    <span class="tag">WORKING PAPER</span>
+                    <span class="tag">PREPRINT · ARXIV:2603.01232</span>
                     <h3>Submodular Risk Measures</h3>
-                    <p class="desc">Developed a theoretical framework to study submodularity for cash-invariant and
-                        convex law-invariant risk measures. Clarified structural links to Choquet-type
-                        representations.</p>
+                    <p class="desc">Studies submodularity for law-invariant functionals: law-invariant coherent risk
+                        measures are submodular exactly when they are coherent distortion risk measures, including
+                        Expected Shortfall. Complete characterizations for shortfall risk measures via Arrow&ndash;Pratt
+                        risk aversion and for optimized certainty equivalents, with an empirical study on daily US
+                        equity returns.</p>
+                    <p class="co">With Ruodu Wang</p>
+                    <a class="paper-link" href="https://arxiv.org/abs/2603.01232" target="_blank"
+                        rel="noopener">READ ON ARXIV ↗</a>
                 </div>
                 <div class="card reveal" style="--d:.12s">
                     <span class="corner"></span>
@@ -1211,7 +1297,7 @@
                     r: (Math.random() * 1.5 + .7) * DPR,
                     ph: Math.random() * Math.PI * 2,
                     sp: Math.random() * .015 + .006,
-                    warm: Math.random() < .55
+                    kind: (r => r < .5 ? 'gold' : r < .78 ? 'aqua' : 'white')(Math.random())
                 }));
             }
 
@@ -1222,7 +1308,8 @@
                     y: Math.random() * H * .5,
                     vx: (fromLeft ? 1 : -1) * (5 + Math.random() * 4) * DPR,
                     vy: (1.2 + Math.random() * 1.4) * DPR,
-                    life: 1
+                    life: 1,
+                    aqua: Math.random() < .4
                 });
             }
 
@@ -1241,7 +1328,9 @@
                         const d2 = dx * dx + dy * dy;
                         if (d2 < LINK * LINK) {
                             const alpha = (1 - Math.sqrt(d2) / LINK) * .34;
-                            ctx.strokeStyle = `rgba(212,175,55,${alpha})`;
+                            ctx.strokeStyle = (a.kind === 'aqua' && b.kind === 'aqua')
+                                ? `rgba(87,200,224,${alpha})`
+                                : `rgba(212,175,55,${alpha})`;
                             ctx.beginPath();
                             ctx.moveTo(a.x, a.y);
                             ctx.lineTo(b.x, b.y);
@@ -1267,9 +1356,11 @@
                     const pulse = (Math.sin(n.ph) + 1) / 2;
                     const r = n.r * (0.75 + pulse * 0.65);
                     ctx.beginPath();
-                    ctx.fillStyle = n.warm
+                    ctx.fillStyle = n.kind === 'gold'
                         ? `rgba(212,175,55,${0.35 + pulse * 0.5})`
-                        : `rgba(255,255,255,${0.25 + pulse * 0.45})`;
+                        : n.kind === 'aqua'
+                            ? `rgba(87,200,224,${0.32 + pulse * 0.5})`
+                            : `rgba(255,255,255,${0.25 + pulse * 0.45})`;
                     ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
                     ctx.fill();
 
@@ -1304,8 +1395,9 @@
                     }
                     const tail = 26;
                     const grad = ctx.createLinearGradient(c.x, c.y, c.x - c.vx * tail, c.y - c.vy * tail);
-                    grad.addColorStop(0, `rgba(250,221,118,${0.85 * c.life})`);
-                    grad.addColorStop(1, 'rgba(250,221,118,0)');
+                    const hue = c.aqua ? '87,200,224' : '250,221,118';
+                    grad.addColorStop(0, `rgba(${hue},${0.85 * c.life})`);
+                    grad.addColorStop(1, `rgba(${hue},0)`);
                     ctx.strokeStyle = grad;
                     ctx.lineWidth = 1.4 * DPR;
                     ctx.beginPath();
