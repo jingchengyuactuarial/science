@@ -721,9 +721,9 @@
             position: absolute;
             inset: -26px;
             border-radius: 50%;
-            background: conic-gradient(from 0deg, rgba(212, 175, 55, 0.35), rgba(87, 200, 224, 0.3), transparent 40%, rgba(212, 175, 55, 0.35));
-            filter: blur(14px);
-            animation: spin 12s linear infinite;
+            background: conic-gradient(from 0deg, rgba(212, 175, 55, 0.2), rgba(87, 200, 224, 0.16), transparent 40%, rgba(212, 175, 55, 0.2));
+            filter: blur(16px);
+            animation: spin 14s linear infinite;
         }
 
         @keyframes spin {
@@ -736,10 +736,21 @@
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            background-color: #B0AAA0;
+            background-color: #26221b;
             object-fit: contain;
             display: block;
-            box-shadow: 0 0 24px rgba(255, 255, 255, 0.5), 0 0 60px rgba(212, 175, 55, 0.4);
+            box-shadow: 0 0 20px rgba(255, 240, 200, 0.18), 0 0 55px rgba(212, 175, 55, 0.25);
+            filter: brightness(.97) contrast(.94) saturate(.92);
+            animation: floaty 6s ease-in-out infinite;
+        }
+
+        .photo-wrap::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            box-shadow: inset 0 0 38px rgba(0, 0, 0, 0.5);
+            pointer-events: none;
             animation: floaty 6s ease-in-out infinite;
         }
 
