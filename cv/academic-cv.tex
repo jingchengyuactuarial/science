@@ -1,0 +1,134 @@
+% Academic CV — Vivian (Jingcheng) Yu
+\documentclass[11pt,letterpaper]{article}
+
+\usepackage[margin=0.9in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{parskip}
+
+\definecolor{gold}{RGB}{158,124,32}
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+
+% Section heading: small caps + gold rule
+\newcommand{\cvsection}[1]{%
+  \vspace{13pt}%
+  {\large\scshape #1}\par
+  \vspace{1.5pt}{\color{gold}\hrule height 0.7pt}\vspace{7pt}%
+}
+
+% Entry with right-aligned date (date never breaks across lines)
+\newcommand{\entry}[2]{{\textbf{#1}\hfill \mbox{#2}\par}}
+
+% Publication-style hanging indent
+\newenvironment{pubs}{%
+  \begin{list}{}{\setlength{\leftmargin}{1.6em}\setlength{\itemindent}{-1.6em}%
+  \setlength{\itemsep}{5pt}\setlength{\parsep}{0pt}\setlength{\topsep}{2pt}}%
+}{\end{list}}
+
+\begin{document}
+
+% ---------- Header ----------
+\begin{center}
+  {\LARGE\scshape Vivian (Jingcheng) Yu}\\[5pt]
+  Department of Statistics and Actuarial Science, University of Waterloo\\[2pt]
+  \href{mailto:j563yu@uwaterloo.ca}{j563yu@uwaterloo.ca} \,\textperiodcentered\, +1 548-994-2385 \,\textperiodcentered\,
+  \href{https://jingchengyuactuarial.github.io/science/}{jingchengyuactuarial.github.io/science}
+\end{center}
+
+% ---------- Education ----------
+\cvsection{Education}
+
+\entry{Ph.D. in Actuarial Science, University of Waterloo}{Sep 2024 -- present}
+Advisor: Ruodu Wang. GPA: 91\%.
+
+\vspace{5pt}
+\entry{Master of Financial Engineering, University of California, Los Angeles}{Dec 2022}
+UCLA Anderson School of Management. GPA: 3.82/4.0.
+
+\vspace{5pt}
+\entry{B.S. in Actuarial Mathematics / Management, University of Manitoba}{Dec 2019}
+First Class Honours; Dean's Honour List. GPA: 4.13/4.50 (major 4.21/4.50).
+
+% ---------- Honors ----------
+\cvsection{Honors \& Awards}
+
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt,topsep=0pt]
+  \item James C.\ Hickman Scholar, Society of Actuaries
+  \item First Class Honours and Dean's Honour List, University of Manitoba, 2019
+\end{itemize}
+
+% ---------- Credentials ----------
+\cvsection{Professional Credentials}
+
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt,topsep=0pt]
+  \item Fellow of the Society of Actuaries (FSA)
+  \item Chartered Enterprise Risk Analyst (CERA)
+  \item CFA Level II Candidate
+\end{itemize}
+
+% ---------- Preprints ----------
+\cvsection{Preprints}
+
+\begin{pubs}
+  \item Wang, R.\ and Yu, J.\ (2026). Submodular risk measures. \href{https://arxiv.org/abs/2603.01232}{arXiv:2603.01232}.
+\end{pubs}
+
+% ---------- Working papers ----------
+\cvsection{Working Papers and Work in Progress}
+
+\begin{pubs}
+  \item Wang, R.\ and Yu, J. ES-only e-backtesting for AR-GARCH losses. Working paper, 2026.
+  \item Wang, R., Xia, C.\ and Yu, J. Mathematics of scenario-based risk evaluation. Work in progress, 2026.
+\end{pubs}
+
+% ---------- Teaching ----------
+\cvsection{Teaching}
+
+\entry{Teaching Assistant, University of Waterloo}{Sep 2024 -- present}
+Tutorials and mentorship for undergraduate actuarial science courses.
+
+\vspace{5pt}
+\entry{Teaching Assistant, University of California, Los Angeles}{Sep -- Dec 2022}
+Tutorial lectures on stochastic calculus; grading and exam proctoring.
+
+\vspace{5pt}
+Teaching certifications: Fundamentals of University Teaching Program (completed); Certificate in University Teaching (in progress), University of Waterloo.
+
+% ---------- Professional experience ----------
+\cvsection{Professional Experience}
+
+\entry{Actuarial Consultant, Ernst \& Young, New York}{Jan -- Sep 2023}
+Portfolio optimization with liabilities and reinvestments via simulated annealing and genetic algorithms in Python; reduced financing cost by 50\%.
+
+\vspace{5pt}
+\entry{Actuarial Student Assistant, California Department of Insurance}{Jun -- Sep 2022}
+Research on ISO filings and guideline revisions; redeveloped the Class Plan Application in VBA, reducing processing time by 30\%.
+
+% ---------- Service ----------
+\cvsection{Professional Service}
+
+\entry{Reviewer and Assessment Grader, Society of Actuaries}{Aug 2022 -- Mar 2024}
+Review Committee member for research paper evaluations (e.g., ``Big Tech \& Insurance'', ``Zero Knowledge Proof''); end-of-module assessment grader.
+
+% ---------- Other research ----------
+\cvsection{Other Research Projects}
+
+\entry{Classification and decision tree models for portfolio design}{Mar -- Dec 2022}
+MFE capstone with UCLA Anderson and Chantico Global: CART models across 14 asset classes and 73 macroeconomic variables with rolling-window analysis.
+
+\vspace{5pt}
+\entry{Triggered shorting strategy on VIX}{May -- Jun 2022}
+IAQF academic competition: regime identification via hidden Markov and clustering models feeding neural network predictions.
+
+% ---------- Skills ----------
+\cvsection{Skills}
+
+Programming: Python, R (Tidyverse), SQL, TensorFlow, VBA, \LaTeX.\quad
+Languages: English, Mandarin Chinese.
+
+\end{document}

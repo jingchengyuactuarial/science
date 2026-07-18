@@ -169,10 +169,10 @@
         /* ---------- Cursor glow (desktop) ---------- */
         #cursor-glow {
             position: fixed;
-            width: 500px;
-            height: 500px;
+            width: 520px;
+            height: 520px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(212, 175, 55, 0.07), transparent 60%);
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, rgba(87, 200, 224, 0.05) 38%, transparent 62%);
             transform: translate(-50%, -50%);
             z-index: 2;
             pointer-events: none;
@@ -354,12 +354,51 @@
             line-height: 1.05;
             font-weight: 700;
             margin-bottom: 26px;
-            background: linear-gradient(110deg, #fff 20%, var(--gold-light) 42%, #fff 58%, var(--gold) 80%);
+            background: linear-gradient(110deg, #fff 15%, var(--gold-light) 35%, #fff 50%, var(--gold) 66%, var(--aqua) 85%, #fff 96%);
             background-size: 220% auto;
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
             animation: sheen 7s linear infinite;
+        }
+
+        /* Aurora blobs (金水交融) */
+        .aurora {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: -1;
+            filter: blur(70px);
+        }
+
+        .aurora-a {
+            width: 540px;
+            height: 540px;
+            left: -140px;
+            top: 8%;
+            background: radial-gradient(closest-side, rgba(212, 175, 55, 0.17), transparent 70%);
+            animation: blob-a 16s ease-in-out infinite alternate;
+        }
+
+        .aurora-b {
+            width: 480px;
+            height: 480px;
+            right: 2%;
+            bottom: 6%;
+            background: radial-gradient(closest-side, rgba(87, 200, 224, 0.15), transparent 70%);
+            animation: blob-b 20s ease-in-out infinite alternate;
+        }
+
+        @keyframes blob-a {
+            to {
+                transform: translate(90px, 60px) scale(1.25);
+            }
+        }
+
+        @keyframes blob-b {
+            to {
+                transform: translate(-110px, -70px) scale(1.18);
+            }
         }
 
         @keyframes sheen {
@@ -522,7 +561,7 @@
             bottom: -10px;
             height: 2px;
             width: 0;
-            background: linear-gradient(90deg, var(--gold), transparent);
+            background: linear-gradient(90deg, var(--gold), var(--aqua), transparent);
             transition: width 1s cubic-bezier(.22, 1, .36, 1) .2s;
         }
 
@@ -676,6 +715,15 @@
             border-radius: 50%;
             border: 1px dashed rgba(212, 175, 55, 0.4);
             animation: spin 26s linear infinite;
+        }
+
+        .photo-wrap .halo {
+            position: absolute;
+            inset: -26px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, rgba(212, 175, 55, 0.35), rgba(87, 200, 224, 0.3), transparent 40%, rgba(212, 175, 55, 0.35));
+            filter: blur(14px);
+            animation: spin 12s linear infinite;
         }
 
         @keyframes spin {
@@ -848,7 +896,10 @@
 
         .contact-box h2 em {
             font-style: italic;
-            color: var(--gold-light);
+            background: linear-gradient(100deg, var(--gold-light), var(--aqua));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .contact-box p {
@@ -891,11 +942,30 @@
             position: relative;
             z-index: 5;
             border-top: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 42px 0 48px;
+            padding: 70px 0 48px;
             text-align: center;
             color: #666;
             font-size: .8rem;
             margin-top: 80px;
+            overflow: hidden;
+        }
+
+        .footer-water {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .footer-water .wave {
+            bottom: -30px;
+            opacity: .8;
+        }
+
+        footer p,
+        footer div {
+            position: relative;
+            z-index: 1;
         }
 
         footer a {
@@ -1061,6 +1131,8 @@
 
         <!-- HERO -->
         <section class="hero" id="home">
+            <div class="aurora aurora-a" aria-hidden="true"></div>
+            <div class="aurora aurora-b" aria-hidden="true"></div>
             <div class="eyebrow reveal in">PH.D. CANDIDATE · ACTUARIAL SCIENCE · UNIVERSITY OF WATERLOO</div>
             <h1 class="reveal in" style="--d:.08s">Vivian (Jingcheng) Yu</h1>
             <div class="typeline reveal in" style="--d:.16s">
@@ -1089,6 +1161,7 @@
 
             <div class="glass about-grid reveal" style="--d:.1s">
                 <div class="photo-wrap">
+                    <div class="halo" aria-hidden="true"></div>
                     <div class="ring" aria-hidden="true"></div>
                     <img src="Photo.jpg" alt="Portrait of Vivian Yu" loading="lazy">
                 </div>
@@ -1253,6 +1326,18 @@
     </main>
 
     <footer>
+        <div class="footer-water" aria-hidden="true">
+            <svg class="wave w1" viewBox="0 0 1600 200" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill="rgba(87,200,224,0.08)"
+                    d="M0,130 C150,100 250,100 400,130 C550,160 650,160 800,130 C950,100 1050,100 1200,130 C1350,160 1450,160 1600,130 L1600,200 L0,200 Z" />
+                <path fill="none" stroke="rgba(250,221,118,0.3)" stroke-width="1.2"
+                    d="M0,130 C150,100 250,100 400,130 C550,160 650,160 800,130 C950,100 1050,100 1200,130 C1350,160 1450,160 1600,130" />
+            </svg>
+            <svg class="wave w2" viewBox="0 0 1600 200" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill="rgba(29,127,156,0.10)"
+                    d="M0,140 C120,115 280,115 400,140 C520,165 680,165 800,140 C920,115 1080,115 1200,140 C1320,165 1480,165 1600,140 L1600,200 L0,200 Z" />
+            </svg>
+        </div>
         <p>&copy; 2026 Vivian (Jingcheng) Yu. All rights reserved.</p>
         <div style="margin-top: 14px;"><a href="#top">Back to Top</a></div>
     </footer>
@@ -1276,7 +1361,7 @@
             const canvas = document.getElementById('net-canvas');
             const ctx = canvas.getContext('2d');
             const DPR = Math.min(window.devicePixelRatio || 1, 1.75);
-            let W = 0, H = 0, nodes = [], comets = [];
+            let W = 0, H = 0, nodes = [], comets = [], bubbles = [], ripples = [];
             const mouse = { x: -9e3, y: -9e3 };
 
             function sizeCanvas() {
@@ -1310,6 +1395,22 @@
                     vy: (1.2 + Math.random() * 1.4) * DPR,
                     life: 1,
                     aqua: Math.random() < .4
+                });
+            }
+
+            function spawnRipple(x, y, aqua) {
+                ripples.push({ x, y, r: 2 * DPR, max: (60 + Math.random() * 80) * DPR, alpha: .55, aqua });
+            }
+
+            function spawnBubble() {
+                bubbles.push({
+                    x: Math.random() * W,
+                    y: H + 10 * DPR,
+                    r: (1 + Math.random() * 2.4) * DPR,
+                    sp: (.35 + Math.random() * .5) * DPR,
+                    ph: Math.random() * Math.PI * 2,
+                    wob: (.4 + Math.random() * .8) * DPR,
+                    life: 1
                 });
             }
 
@@ -1405,6 +1506,49 @@
                     ctx.lineTo(c.x - c.vx * tail, c.y - c.vy * tail);
                     ctx.stroke();
                 }
+
+                // bubbles (water rising)
+                for (let i = bubbles.length - 1; i >= 0; i--) {
+                    const b = bubbles[i];
+                    b.y -= b.sp;
+                    b.ph += .03;
+                    b.x += Math.sin(b.ph) * b.wob * .3;
+                    if (b.y < H * .45) b.life -= .012;
+                    if (b.life <= 0 || b.y < -10) {
+                        bubbles.splice(i, 1);
+                        continue;
+                    }
+                    ctx.strokeStyle = `rgba(87,200,224,${.3 * b.life})`;
+                    ctx.lineWidth = .9 * DPR;
+                    ctx.beginPath();
+                    ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+                    ctx.stroke();
+                    ctx.fillStyle = `rgba(250,221,118,${.35 * b.life})`;
+                    ctx.beginPath();
+                    ctx.arc(b.x - b.r * .35, b.y - b.r * .35, .5 * DPR, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                // ripples (water rings)
+                for (let i = ripples.length - 1; i >= 0; i--) {
+                    const rp = ripples[i];
+                    rp.r += 1.6 * DPR;
+                    rp.alpha *= .962;
+                    if (rp.r > rp.max || rp.alpha < .02) {
+                        ripples.splice(i, 1);
+                        continue;
+                    }
+                    const col = rp.aqua ? '87,200,224' : '212,175,55';
+                    ctx.lineWidth = 1.1 * DPR;
+                    ctx.strokeStyle = `rgba(${col},${rp.alpha})`;
+                    ctx.beginPath();
+                    ctx.arc(rp.x, rp.y, rp.r, 0, Math.PI * 2);
+                    ctx.stroke();
+                    ctx.strokeStyle = `rgba(${col},${rp.alpha * .45})`;
+                    ctx.beginPath();
+                    ctx.arc(rp.x, rp.y, rp.r * .6, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
             }
 
             let rafId = null;
@@ -1419,6 +1563,13 @@
             if (!reduceMotion) {
                 loop();
                 setInterval(() => { if (!document.hidden && Math.random() < .75) spawnComet(); }, 4200);
+                setInterval(() => { if (!document.hidden && bubbles.length < 14) spawnBubble(); }, 900);
+                setInterval(() => {
+                    if (!document.hidden) spawnRipple(Math.random() * W, H * (.7 + Math.random() * .28), Math.random() < .6);
+                }, 2600);
+                addEventListener('pointerdown', e => {
+                    spawnRipple(e.clientX * DPR, e.clientY * DPR, Math.random() < .5);
+                }, { passive: true });
                 document.addEventListener('visibilitychange', () => {
                     if (document.hidden) {
                         cancelAnimationFrame(rafId);
